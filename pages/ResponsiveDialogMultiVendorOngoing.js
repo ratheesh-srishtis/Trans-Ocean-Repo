@@ -20,7 +20,6 @@ import {
 import PopUp from "./PopUp";
 import { saveAs } from "file-saver";
 import CreditNoteMail from "./CreditNoteMail";
-import brandConfig from "../config/brandConfig";
 const ResponsiveDialog = ({
   open,
   onClose,
@@ -1141,7 +1140,7 @@ const ResponsiveDialog = ({
                             htmlFor="exampleFormControlInput1"
                             className="form-label"
                           >
-                            Amount({brandConfig?.currencyName}):
+                            Amount(OMR):
                             <span className="required"> * </span>
                           </label>
                           <input
@@ -1158,7 +1157,7 @@ const ResponsiveDialog = ({
                         {customerAmountError && (
                           <>
                             <div className="invalid">
-                              Please enter {brandConfig?.currencyName} amount
+                              Please enter OMR amount
                             </div>
                           </>
                         )}
@@ -1204,7 +1203,7 @@ const ResponsiveDialog = ({
                             htmlFor="exampleFormControlInput1"
                             className="form-label"
                           >
-                            Total {brandConfig?.currencyName}:
+                            Total OMR:
                           </label>
                           <input
                             type="number"
@@ -1295,9 +1294,7 @@ const ResponsiveDialog = ({
                       <div className="col">
                         <div className="mb-3">
                           <div className="col">
-                            <label className="form-label">
-                              Amount({brandConfig?.currencyName}):
-                            </label>
+                            <label className="form-label">Amount(OMR):</label>
                             <input
                               type="number"
                               className="form-control vessel-voyage"
@@ -1339,9 +1336,7 @@ const ResponsiveDialog = ({
                       <div className="col-4">
                         <div className="mb-3">
                           <div className="col">
-                            <label className="form-label">
-                              Total {brandConfig?.currencyName}:
-                            </label>
+                            <label className="form-label">Total OMR:</label>
                             <input
                               type="number"
                               className="form-control vessel-voyage"
@@ -1546,17 +1541,13 @@ const ResponsiveDialog = ({
                             </div>
 
                             <div className="omr col-6 table_seperation">
-                              <span className="marinehead">
-                                Amount ({brandConfig?.currencyName}):
-                              </span>
+                              <span className="marinehead">Amount (OMR):</span>
                               <span className="subvalue">
                                 {charge.customerOMR.toFixed(3)}
                               </span>
                             </div>
                             <div className="omr col-6">
-                              <span className="marinehead">
-                                Amount ({brandConfig?.currencyName}):
-                              </span>
+                              <span className="marinehead">Amount (OMR):</span>
                               <span className="subvalue">
                                 {charge.vendorOMR.toFixed(3)}
                               </span>
@@ -1576,9 +1567,7 @@ const ResponsiveDialog = ({
                             </div>
 
                             <div className="omr col-6 table_seperation">
-                              <span className="marinehead">
-                                Total ({brandConfig?.currencyName}):
-                              </span>
+                              <span className="marinehead">Total (OMR):</span>
                               <span className="subvalue">
                                 {(
                                   Number(charge.customerOMR) +
@@ -1587,9 +1576,7 @@ const ResponsiveDialog = ({
                               </span>
                             </div>
                             <div className="omr col-6">
-                              <span className="marinehead">
-                                Total ({brandConfig?.currencyName}):
-                              </span>
+                              <span className="marinehead">Total (OMR):</span>
                               <span className="subvalue">
                                 {(
                                   Number(charge.vendorOMR) +
@@ -2091,7 +2078,7 @@ const ResponsiveDialog = ({
                           htmlFor="exampleFormControlInput1"
                           className="form-label labelhead"
                         >
-                          Amount({brandConfig?.currencyName}):
+                          Amount(OMR):
                         </label>
                       </div>
                       <div className="col-7 justify-content-start ">
@@ -2148,7 +2135,7 @@ const ResponsiveDialog = ({
                           htmlFor="exampleFormControlInput1"
                           className="form-label labelhead"
                         >
-                          Total {brandConfig?.currencyName}:
+                          Total OMR:
                         </label>
                       </div>
                       <div className="col-7 d-flex justify-content-start ">
@@ -2258,7 +2245,7 @@ const ResponsiveDialog = ({
                           htmlFor="exampleFormControlInput1"
                           className="form-label labelhead"
                         >
-                          Amount({brandConfig?.currencyName}):
+                          Amount(OMR):
                         </label>
                       </div>
                       <div className="col-7  justify-content-start ">
@@ -2314,7 +2301,7 @@ const ResponsiveDialog = ({
                           htmlFor="exampleFormControlInput1"
                           className="form-label labelhead"
                         >
-                          Total {brandConfig?.currencyName}:
+                          Total OMR:
                         </label>
                       </div>
                       <div className="col-7 d-flex justify-content-start ">

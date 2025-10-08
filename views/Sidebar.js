@@ -3,7 +3,6 @@ import { NavLink } from "react-router-dom";
 import "../css/sidebar.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import brandConfig from "../config/brandConfig";
 import { useMedia } from "../context/MediaContext";
 const Sidebar = () => {
   const { loginResponse } = useAuth();

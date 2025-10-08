@@ -25,7 +25,6 @@ import {
 import Loader from "./Loader";
 import { useAuth } from "../context/AuthContext";
 import { AttachFile, Delete, Visibility } from "@mui/icons-material";
-import brandConfig from "../config/brandConfig"; // Import brand configuration
 const QuotationDialog = ({
   open,
   onClose,
@@ -53,7 +52,7 @@ const QuotationDialog = ({
 
   const [openPopUp, setOpenPopUp] = useState(false);
   const [message, setMessage] = useState("");
-  const [hasAED, setHasAED] = useState(brandConfig?.currencyName === "AED");
+  const [hasAED, setHasAED] = useState(false);
 
   const handleAEDChange = (e) => {
     setHasAED(e.target.checked);
@@ -491,27 +490,23 @@ const QuotationDialog = ({
               </div>
             </div>
 
-            {brandConfig?.currencyName === "OMR" && (
-              <>
-                <div className="row align-items-center mb-3">
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      id="hasAedCheckbox"
-                      checked={hasAED}
-                      onChange={handleAEDChange}
-                    />
-                    <label
-                      className="form-check-label ms-2"
-                      htmlFor="hasAedCheckbox"
-                    >
-                      Has AED
-                    </label>
-                  </div>
-                </div>
-              </>
-            )}
+            <div className="row align-items-center mb-3">
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="hasAedCheckbox"
+                  checked={hasAED}
+                  onChange={handleAEDChange}
+                />
+                <label
+                  className="form-check-label ms-2"
+                  htmlFor="hasAedCheckbox"
+                >
+                  Has AED
+                </label>
+              </div>
+            </div>
 
             <div className="firstfooter d-flex justify-content-end">
               <button

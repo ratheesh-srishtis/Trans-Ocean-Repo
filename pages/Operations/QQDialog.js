@@ -12,7 +12,6 @@ import {
   Button,
 } from "@mui/material";
 import { useMedia } from "../../context/MediaContext";
-import brandConfig from "../../config/brandConfig";
 const QQDialog = ({ open, onClose, pdaId, ports, vessels }) => {
   const [pdaResponse, setPdaResponse] = useState(null);
   const [questionsList, setQuestionsList] = useState([]);

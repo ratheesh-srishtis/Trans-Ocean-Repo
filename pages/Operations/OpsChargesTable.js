@@ -7,7 +7,6 @@ import PopUp from "../PopUp";
 import AddJobs from "./AddJobs";
 import "../../css/addjobs.css";
 import { useAuth } from "../../context/AuthContext";
-import brandConfig from "../../config/brandConfig";
 const OpsChargesTable = ({
   chargesArray,
   services,
@@ -120,13 +119,9 @@ const OpsChargesTable = ({
               {loginResponse?.data?.userRole?.roleType?.toLowerCase() !==
                 "operations" && (
                 <>
-                  <th className="tableheadcolor">
-                    Amount ({brandConfig?.currencyName})
-                  </th>
+                  <th className="tableheadcolor">Amount (OMR)</th>
                   <th className="tableheadcolor">VAT Amount</th>
-                  <th className="tableheadcolor">
-                    Total {brandConfig?.currencyName}
-                  </th>
+                  <th className="tableheadcolor">Total OMR</th>
                   <th className="tableheadcolor">Total USD</th>
                 </>
               )}
@@ -233,27 +228,15 @@ const OpsChargesTable = ({
                   {loginResponse?.data?.userRole?.roleType?.toLowerCase() !==
                     "operations" && (
                     <>
-                      <td>
-                        {charge.customerOMR.toFixed(
-                          brandConfig?.currencyName === "OMR" ? 3 : 2
-                        )}
-                      </td>
-                      <td>
-                        {charge.customerVAT.toFixed(
-                          brandConfig?.currencyName === "OMR" ? 3 : 2
-                        )}
-                      </td>
+                      <td>{charge.customerOMR.toFixed(3)}</td>
+                      <td>{charge.customerVAT.toFixed(3)}</td>
                       <td>
                         {(
                           parseFloat(charge.customerOMR) +
                           parseFloat(charge.customerVAT)
-                        ).toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2)}
+                        ).toFixed(3)}
                       </td>
-                      <td>
-                        {charge.customerTotalUSD.toFixed(
-                          brandConfig?.currencyName === "OMR" ? 3 : 2
-                        )}
-                      </td>
+                      <td>{charge.customerTotalUSD.toFixed(3)}</td>
                     </>
                   )}
 

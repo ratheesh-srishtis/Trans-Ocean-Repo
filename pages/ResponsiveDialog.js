@@ -20,7 +20,6 @@ import {
 import PopUp from "./PopUp";
 import { saveAs } from "file-saver";
 import CreditNoteMail from "./CreditNoteMail";
-import brandConfig from "../config/brandConfig";
 const ResponsiveDialog = ({
   open,
   onClose,
@@ -231,11 +230,7 @@ const ResponsiveDialog = ({
       setCreditNote(value);
       setIsUserInput(false);
       console.log(originalCustomerAmount, "originalCustomerAmount");
-      setCustomerAmount(
-        (originalCustomerAmount - value)?.toFixed(
-          brandConfig?.currencyName === "OMR" ? 3 : 2
-        )
-      ); // adjust from original
+      setCustomerAmount((originalCustomerAmount - value)?.toFixed(3)); // adjust from original
     }
   };
 
@@ -667,57 +662,28 @@ const ResponsiveDialog = ({
   }, [customerTotalUSD]);
 
   // Recalculate only if user input flag is false
-  // Recalculate only if user input flag is false
   useEffect(() => {
     console.log(isUserInput, "isUserInput");
     if (!isUserInput) {
       let total = Number(customerAmount) + Number(customerVatAmount);
-      // setCustomerTotalOmr(total.toFixed(3));
-      console.log(total, "total customerAmount + customerVatAmount");
-      console.log(brandConfig?.currencyName, "brandConfig?.currencyName");
-      // let customer_total_usd = Number(total * 2.62);
       let customer_total_usd;
-      if (brandConfig?.currencyName == "AED") {
-        customer_total_usd = Number(total / aedConversionRate);
-      } else if (brandConfig?.currencyName == "OMR") {
-        customer_total_usd = Number(total * 2.62);
-      }
-      setCustomerTotalUSD(
-        customer_total_usd.toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2)
-      );
+      customer_total_usd = Number(total * 2.62);
+      setCustomerTotalUSD(customer_total_usd.toFixed(3));
     }
     let total = Number(customerAmount) + Number(customerVatAmount);
-    setCustomerTotalOmr(
-      total.toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2)
-    );
+    setCustomerTotalOmr(total.toFixed(3));
   }, [customerAmount, customerVatAmount, isUserInput]);
-
-  // Reset the user input flag whenever the value is updated programmatically
-  // useEffect(() => {
-  //   console.log(customerTotalUSD, "customerTotalUSD");
-  //   setIsUserInput(false);
-  // }, [customerAmount, customerVatAmount]);
 
   useEffect(() => {
     console.log(isVendorUserInput, "isVendorUserInput");
 
     if (!isVendorUserInput) {
       let total = Number(vendorAmount) + Number(vendorVatAmount);
-      // setVendorTotalOmr(total.toFixed(3));
-
-      // let vendor_total_usd = Number(total * 2.62);
       let vendor_total_usd;
-
-      if (brandConfig?.currencyName == "AED") {
-        vendor_total_usd = Number(total / aedConversionRate);
-      } else if (brandConfig?.currencyName == "OMR") {
-        vendor_total_usd = Number(total * 2.62);
-      }
+      vendor_total_usd = Number(total * 2.62);
     }
     let total = Number(vendorAmount) + Number(vendorVatAmount);
-    setVendorTotalOmr(
-      total.toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2)
-    );
+    setVendorTotalOmr(total.toFixed(3));
   }, [vendorAmount, vendorVatAmount, isVendorUserInput]);
 
   // useEffect(() => {
@@ -894,7 +860,7 @@ const ResponsiveDialog = ({
               const sum =
                 Number(editCharge[omrKey]) + Number(editCharge[vatKey]);
               if (isNaN(sum)) return "";
-              return sum.toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2);
+              return sum.toFixed(3);
             })(),
             vendorTotalUSD: editCharge[totalUSDKey] || "",
             isPrivateVendor: !!editCharge[privateKey],
@@ -916,7 +882,7 @@ const ResponsiveDialog = ({
         ]);
       }
     }
-  }, [isEditcharge, editCharge, brandConfig]);
+  }, [isEditcharge, editCharge]);
 
   const [mailPopupOpen, setMailPopupOpen] = useState(false);
 
@@ -981,20 +947,12 @@ const ResponsiveDialog = ({
           );
           // If user is editing vendorAmount or vendorVatAmount, recalculate totals
           if (field === "vendorAmount" || field === "vendorVatAmount") {
-            updatedSection.vendorTotalOmr = (amount + vat).toFixed(
-              brandConfig?.currencyName === "OMR" ? 3 : 2
-            );
+            updatedSection.vendorTotalOmr = (amount + vat).toFixed(3);
             // Always update vendorTotalUSD with calculated value unless user is currently editing vendorTotalUSD
             if (!updatedSection._userSetVendorTotalUSD) {
               let vendor_total_usd = 0;
-              if (brandConfig?.currencyName === "AED") {
-                vendor_total_usd = Number((amount + vat) / aedConversionRate);
-              } else if (brandConfig?.currencyName === "OMR") {
-                vendor_total_usd = Number((amount + vat) * 2.62);
-              }
-              updatedSection.vendorTotalUSD = vendor_total_usd.toFixed(
-                brandConfig?.currencyName === "OMR" ? 3 : 2
-              );
+              vendor_total_usd = Number((amount + vat) * 2.62);
+              updatedSection.vendorTotalUSD = vendor_total_usd.toFixed(3);
             }
           }
           // If user edits vendorTotalUSD, set flag so it doesn't get overwritten by calculation
@@ -1229,7 +1187,7 @@ const ResponsiveDialog = ({
                             htmlFor="exampleFormControlInput1"
                             className="form-label"
                           >
-                            Amount({brandConfig?.currencyName}):
+                            Amount(OMR):
                             <span className="required"> * </span>
                           </label>
                           <input
@@ -1246,7 +1204,7 @@ const ResponsiveDialog = ({
                         {customerAmountError && (
                           <>
                             <div className="invalid">
-                              Please enter {brandConfig?.currencyName} amount
+                              Please enter OMR amount
                             </div>
                           </>
                         )}
@@ -1292,7 +1250,7 @@ const ResponsiveDialog = ({
                             htmlFor="exampleFormControlInput1"
                             className="form-label"
                           >
-                            Total {brandConfig?.currencyName}:
+                            Total OMR:
                           </label>
                           <input
                             type="number"
@@ -1383,9 +1341,7 @@ const ResponsiveDialog = ({
                       <div className="col">
                         <div className="mb-3">
                           <div className="col">
-                            <label className="form-label">
-                              Amount({brandConfig?.currencyName}):
-                            </label>
+                            <label className="form-label">Amount(OMR):</label>
                             <input
                               type="number"
                               className="form-control vessel-voyage"
@@ -1435,9 +1391,7 @@ const ResponsiveDialog = ({
                       <div className="col-4">
                         <div className="mb-3">
                           <div className="col">
-                            <label className="form-label">
-                              Total {brandConfig?.currencyName}:
-                            </label>
+                            <label className="form-label">Total OMR:</label>
                             <input
                               type="number"
                               className="form-control vessel-voyage"
@@ -1628,45 +1582,33 @@ const ResponsiveDialog = ({
 
                           <div className="row mb-3">
                             <div className="omr col-3 ">
-                              <span className="marinehead">
-                                Amount ({brandConfig?.currencyName}):
-                              </span>
+                              <span className="marinehead">Amount (OMR):</span>
                               <span className="subvalue">
-                                {charge.customerOMR.toFixed(
-                                  brandConfig?.currencyName === "OMR" ? 3 : 2
-                                )}
+                                {charge.customerOMR.toFixed(3)}
                               </span>
                             </div>
 
                             <div className="vat col-3 ">
                               <span className="marinehead">VAT Amount:</span>
                               <span className="subvalue">
-                                {charge.customerVAT.toFixed(
-                                  brandConfig?.currencyName === "OMR" ? 3 : 2
-                                )}
+                                {charge.customerVAT.toFixed(3)}
                               </span>
                             </div>
 
                             <div className="omr col-3 ">
-                              <span className="marinehead">
-                                Total ({brandConfig?.currencyName}):
-                              </span>
+                              <span className="marinehead">Total (OMR):</span>
                               <span className="subvalue">
                                 {(
                                   Number(charge.customerOMR) +
                                   Number(charge.customerVAT)
-                                ).toFixed(
-                                  brandConfig?.currencyName === "OMR" ? 3 : 2
-                                )}
+                                ).toFixed(3)}
                               </span>
                             </div>
 
                             <div className="vat col-3 ">
                               <span className="marinehead">Total USD:</span>
                               <span className="subvalue">
-                                {charge.customerTotalUSD.toFixed(
-                                  brandConfig?.currencyName === "OMR" ? 3 : 2
-                                )}
+                                {charge.customerTotalUSD.toFixed(3)}
                               </span>
                             </div>
                           </div>
@@ -2044,7 +1986,7 @@ const ResponsiveDialog = ({
                           htmlFor="exampleFormControlInput1"
                           className="form-label labelhead"
                         >
-                          Amount({brandConfig?.currencyName}):
+                          Amount(OMR):
                         </label>
                       </div>
                       <div className="col-7 justify-content-start ">
@@ -2101,7 +2043,7 @@ const ResponsiveDialog = ({
                           htmlFor="exampleFormControlInput1"
                           className="form-label labelhead"
                         >
-                          Total {brandConfig?.currencyName}:
+                          Total OMR:
                         </label>
                       </div>
                       <div className="col-7 d-flex justify-content-start ">
@@ -2177,154 +2119,6 @@ const ResponsiveDialog = ({
                   {/* Vendor Charges Edit dynamic sections */}
                   <div className="col-12">
                     <div className="tablehead">Vendor Charges</div>
-                    {/* {vendorSections.map((section, idx) => (
-                      <div
-                        className="row"
-                        key={idx}
-                        style={{
-                          borderBottom: "1px solid #eee",
-                          marginBottom: 12,
-                          paddingBottom: 12,
-                          boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
-                        }}
-                      >
-                        <div className="row align-items-start">
-                          <div className="col">
-                            <label className="form-label">Vendor:</label>
-                            <div className="vessel-select">
-                              <select
-                                name="vendor"
-                                className="form-select vesselbox"
-                                aria-label="Default select example"
-                                value={section.vendor}
-                                onChange={(e) =>
-                                  handleVendorSectionChange(
-                                    idx,
-                                    "vendor",
-                                    e.target.value
-                                  )
-                                }
-                              >
-                                <option value="">Choose Vendor</option>
-                                {vendors?.map((vendor) => (
-                                  <option key={vendor._id} value={vendor._id}>
-                                    {vendor.vendorName}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-                          </div>
-                          <div className="col">
-                            <div className="mb-3">
-                              <div className="col">
-                                <label className="form-label">
-                                  Amount({brandConfig?.currencyName}):
-                                </label>
-                                <input
-                                  type="number"
-                                  className="form-control vessel-voyage"
-                                  name="vendorAmount"
-                                  value={section.vendorAmount}
-                                  onChange={(e) =>
-                                    handleVendorSectionChange(
-                                      idx,
-                                      "vendorAmount",
-                                      e.target.value
-                                    )
-                                  }
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          <div className="col">
-                            <div className="mb-3">
-                              <div className="col">
-                                <label className="form-label">
-                                  VAT Amount:
-                                </label>
-                                <input
-                                  type="number"
-                                  className="form-control vessel-voyage"
-                                  name="vendorVatAmount"
-                                  value={section.vendorVatAmount}
-                                  onChange={(e) =>
-                                    handleVendorSectionChange(
-                                      idx,
-                                      "vendorVatAmount",
-                                      e.target.value
-                                    )
-                                  }
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="row align-items-center">
-                          <div className="col-4">
-                            <div className="mb-3">
-                              <div className="col">
-                                <label className="form-label">
-                                  Total {brandConfig?.currencyName}:
-                                </label>
-                                <input
-                                  type="number"
-                                  className="form-control vessel-voyage"
-                                  name="vendorTotalOmr"
-                                  value={section.vendorTotalOmr}
-                                  disabled
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          <div className="col-4">
-                            <div className="mb-3">
-                              <div className="col">
-                                <label className="form-label">Total USD:</label>
-                                <input
-                                  type="number"
-                                  className="form-control vessel-voyage"
-                                  name="vendorTotalUSD"
-                                  value={section.vendorTotalUSD}
-                                  onChange={(e) =>
-                                    handleVendorSectionChange(
-                                      idx,
-                                      "vendorTotalUSD",
-                                      e.target.value
-                                    )
-                                  }
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          <div className="col-4">
-                            <div
-                              className="form-check pvendor"
-                              style={{ display: "flex", alignItems: "center" }}
-                            >
-                              <input
-                                className="form-check-input"
-                                type="checkbox"
-                                id={`flexCheckDefault-vendor-edit-${idx}`}
-                                checked={section.isPrivateVendor}
-                                onChange={(e) =>
-                                  handleVendorSectionChange(
-                                    idx,
-                                    "isPrivateVendor",
-                                    e.target.checked
-                                  )
-                                }
-                              />
-                              <label
-                                className="form-check-label"
-                                htmlFor={`flexCheckDefault-vendor-edit-${idx}`}
-                              >
-                                Private Vendor
-                              </label>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))} */}
                     {vendorSections.map((section, idx) => (
                       <div
                         className="row"
@@ -2366,7 +2160,7 @@ const ResponsiveDialog = ({
                             <div className="mb-3">
                               <div className="col">
                                 <label className="form-label">
-                                  Amount({brandConfig?.currencyName}):
+                                  Amount(OMR):
                                 </label>
                                 <input
                                   type="number"
@@ -2419,9 +2213,7 @@ const ResponsiveDialog = ({
                           <div className="col-4">
                             <div className="mb-3">
                               <div className="col">
-                                <label className="form-label">
-                                  Total {brandConfig?.currencyName}:
-                                </label>
+                                <label className="form-label">Total OMR:</label>
                                 <input
                                   type="number"
                                   className="form-control vessel-voyage"

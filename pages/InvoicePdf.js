@@ -14,7 +14,6 @@ import "../css/invoicepdf.css";
 import { getPdaFile, getPdaDetails } from "../services/apiService";
 import moment from "moment";
 import PopUp from "./PopUp";
-import brandConfig from "../config/brandConfig";
 import { useMedia } from "../context/MediaContext";
 const InvoicePdf = ({
   open,
@@ -176,15 +175,9 @@ const InvoicePdf = ({
 
   const formattedTotals = {
     quantity: totalValues?.quantity,
-    customerOMR: totalValues?.customerOMR.toFixed(
-      brandConfig?.currencyName === "OMR" ? 3 : 2
-    ),
-    customerVAT: totalValues?.customerVAT.toFixed(
-      brandConfig?.currencyName === "OMR" ? 3 : 2
-    ),
-    customerTotalUSD: totalValues?.customerTotalUSD.toFixed(
-      brandConfig?.currencyName === "OMR" ? 3 : 2
-    ),
+    customerOMR: totalValues?.customerOMR.toFixed(3),
+    customerVAT: totalValues?.customerVAT.toFixed(3),
+    customerTotalUSD: totalValues?.customerTotalUSD.toFixed(3),
   };
 
   // const [fetchedCharges, setFetchedCharges] = useState(new Set());
@@ -284,15 +277,9 @@ const InvoicePdf = ({
 
   const formattedVendorTotals = {
     quantity: vendorTotalValues?.quantity,
-    vendorOMR: vendorTotalValues?.vendorOMR.toFixed(
-      brandConfig?.currencyName === "OMR" ? 3 : 2
-    ),
-    vendorVAT: vendorTotalValues?.vendorVAT.toFixed(
-      brandConfig?.currencyName === "OMR" ? 3 : 2
-    ),
-    vendorTotalUSD: vendorTotalValues?.vendorTotalUSD.toFixed(
-      brandConfig?.currencyName === "OMR" ? 3 : 2
-    ),
+    vendorOMR: vendorTotalValues?.vendorOMR.toFixed(3),
+    vendorVAT: vendorTotalValues?.vendorVAT.toFixed(3),
+    vendorTotalUSD: vendorTotalValues?.vendorTotalUSD.toFixed(3),
   };
 
   return (
@@ -412,13 +399,9 @@ const InvoicePdf = ({
                 <th className="stilefour">Sl.No</th>
                 <th className="stilefour">Particulars</th>
                 <th className="stilefour">Quantity</th>
-                <th className="stilethree">
-                  Amount ({brandConfig?.currencyName})
-                </th>
+                <th className="stilethree">Amount (OMR)</th>
                 <th className="stilethree">VAT AMOUNT</th>
-                <th className="stilethree">
-                  TOTAL AMOUNT ({brandConfig?.currencyName})
-                </th>
+                <th className="stilethree">TOTAL AMOUNT (OMR)</th>
                 <th className="stilethree">TOTAL AMOUNT (USD)</th>
               </tr>
             </thead>
@@ -436,25 +419,19 @@ const InvoicePdf = ({
                       <td className="stiletwo">{charge?.quantity}</td>
 
                       <td className="stileone">
-                        {charge.customerOMR.toFixed(
-                          brandConfig?.currencyName === "OMR" ? 3 : 2
-                        )}
+                        {charge.customerOMR.toFixed(3)}
                       </td>
                       <td className="stileone">
-                        {charge.customerVAT.toFixed(
-                          brandConfig?.currencyName === "OMR" ? 3 : 2
-                        )}
+                        {charge.customerVAT.toFixed(3)}
                       </td>
                       <td className="stileone">
                         {(
                           parseFloat(charge.customerOMR) +
                           parseFloat(charge.customerVAT)
-                        ).toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2)}
+                        ).toFixed(3)}
                       </td>
                       <td className="stileone">
-                        {charge.customerTotalUSD.toFixed(
-                          brandConfig?.currencyName === "OMR" ? 3 : 2
-                        )}
+                        {charge.customerTotalUSD.toFixed(3)}
                       </td>
                     </tr>
                     {charge?.remark && (
@@ -479,7 +456,7 @@ const InvoicePdf = ({
               </tr>
               <tr>
                 <td colspan="6" className="amount">
-                  TOTAL AMOUNT IN {brandConfig?.currencyName}
+                  TOTAL AMOUNT IN OMR
                 </td>
 
                 <td className="amount">{formattedVendorTotals.vendorOMR}</td>
@@ -511,13 +488,12 @@ const InvoicePdf = ({
           <div>
             <div className="payment">
               Ple/ase remit to the following bank account with advice to us
-              <br /> Kindly find our {brandConfig?.currencyName} account in
-              below
+              <br /> Kindly find our OMR account in below
               <br /> OUR BANKING ACCOUNT DETAILS
               <br /> TRANS OCEAN MARITIME SERVICES LLC
               <br /> BANK MUSCAT
               <br /> FALAJ AL QABAIL SOHAR, SULTANATE OF OMAN
-              <br /> A/C NUMBER:- 0423061688920014 ({brandConfig?.currencyName})
+              <br /> A/C NUMBER:- 0423061688920014 (OMR)
               <br /> A/C NUMBER:- 0423061688920022 (USD)
               <br /> SWIFT CODE: - BMUSOMRXXXX
             </div>

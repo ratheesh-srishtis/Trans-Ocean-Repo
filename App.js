@@ -15,7 +15,6 @@ import OtpVerification from "./auth/OtpVerification";
 import ResetPassword from "./auth/ResetPassword";
 import NotFound from "./views/NotFound";
 import { ChatProvider } from "./views/ChatContext";
-import brand from "./config/brandConfig"; // Importing brand configuration
 import { MediaProvider } from "./context/MediaContext";
 const App = () => {
   // State variables for each select option
@@ -58,7 +57,7 @@ const App = () => {
   }, [notFound]);
 
   useEffect(() => {
-    document.title = brand.title;
+    document.title = "Trans Ocean";
   }, []);
 
   useEffect(() => {

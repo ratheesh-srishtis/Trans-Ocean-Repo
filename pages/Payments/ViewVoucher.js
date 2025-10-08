@@ -4,7 +4,6 @@ import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { generateVoucherPDF } from "../../services/apiPayment";
 import { saveAs } from "file-saver";
 import "../../css/viewvoucher.css";
-import brandConfig from "../../config/brandConfig";
 import { useMedia } from "../../context/MediaContext";
 
 const { ToWords } = require("to-words");
@@ -194,7 +193,7 @@ const ViewVoucher = ({ open, onClose, getvoucher }) => {
                       {getWordRepresentation(amount, "Dirham")}
                     </td>
                     <td className="voucheramountrate text-center">
-                      {brandConfig?.currencyName} {amount}
+                      OMR {amount}
                     </td>
                   </tr>
                 </tbody>

@@ -9,7 +9,6 @@ import {
 import { DataGrid } from "@mui/x-data-grid";
 import "react-datepicker/dist/react-datepicker.css";
 import Loader from "../Loader";
-import brandConfig from "../../config/brandConfig";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 const CostCenterBreakup = () => {
@@ -117,9 +116,7 @@ const CostCenterBreakup = () => {
     }
     return sum + vendorTotal;
   }, 0);
-  const profitOrLoss = (totalCustomerAmount - totalVendorAmount).toFixed(
-    brandConfig?.currencyName === "OMR" ? 3 : 2
-  );
+  const profitOrLoss = (totalCustomerAmount - totalVendorAmount).toFixed(3);
   console.log(totalCustomerAmount, "totalCustomerAmount_checkamount");
   console.log(totalVendorAmount, "totalVendorAmount_checkamount");
 
@@ -143,9 +140,7 @@ const CostCenterBreakup = () => {
       sortable: false,
       renderCell: (params) =>
         params.value && !isNaN(params.value)
-          ? `${brandConfig?.currencyName} ${Number(params.value).toFixed(
-              brandConfig?.currencyName === "OMR" ? 3 : 2
-            )}`
+          ? `OMR ${Number(params.value).toFixed(3)}`
           : "",
     },
     {
@@ -260,9 +255,7 @@ const CostCenterBreakup = () => {
               : parseFloat(service[vatKeys[idx]]) || 0;
           // Show value even if 0, if vendor name exists
           if (vendorNames[idx]) {
-            return `${brandConfig?.currencyName} ${(omr + vat).toFixed(
-              brandConfig?.currencyName === "OMR" ? 3 : 2
-            )}`;
+            return `OMR ${(omr + vat).toFixed(3)}`;
           }
           return null;
         })
@@ -333,118 +326,6 @@ const CostCenterBreakup = () => {
     }
   };
 
-  // Create Excel for Cost Center Breakup
-  // const createExcel = () => {
-  //   if (!services || services.length === 0) return;
-  //   const excelData = services.map((service, index) => ({
-  //     Sales: index === 0 ? `Invoice No : ${invoiceId}` : "",
-  //     Amount: (service.customerOMR + service.customerVAT).toFixed(
-  //       brandConfig?.currencyName === "OMR" ? 3 : 2
-  //     ),
-  //     Purchase: (() => {
-  //       const vendorNames = [
-  //         service?.vendorId?.vendorName,
-  //         service?.vendor2Id?.vendorName,
-  //         service?.vendor3Id?.vendorName,
-  //         service?.vendor4Id?.vendorName,
-  //       ].filter(Boolean);
-  //       if (vendorNames.length > 1) {
-  //         return (
-  //           vendorNames.map((name, idx) => `${idx + 1}. ${name}`).join("\r\n") +
-  //           "\r\n"
-  //         );
-  //       } else if (vendorNames.length === 1) {
-  //         return vendorNames[0];
-  //       } else {
-  //         return "";
-  //       }
-  //     })(),
-  //     "Amount ": (() => {
-  //       // Array of vendor OMR and VAT keys
-  //       const omrKeys = ["vendorOMR", "vendor2OMR", "vendor3OMR", "vendor4OMR"];
-  //       const vatKeys = ["vendorVAT", "vendor2VAT", "vendor3VAT", "vendor4VAT"];
-  //       // Get vendor names for count
-  //       const vendorNames = [
-  //         service?.vendorId?.vendorName,
-  //         service?.vendor2Id?.vendorName,
-  //         service?.vendor3Id?.vendorName,
-  //         service?.vendor4Id?.vendorName,
-  //       ].filter(Boolean);
-
-  //       // Always show all amounts if there are multiple vendor names
-  //       const amounts = omrKeys
-  //         .map((omrKey, idx) => {
-  //           const omr =
-  //             typeof service[omrKey] === "number"
-  //               ? service[omrKey]
-  //               : parseFloat(service[omrKey]) || 0;
-  //           const vat =
-  //             typeof service[vatKeys[idx]] === "number"
-  //               ? service[vatKeys[idx]]
-  //               : parseFloat(service[vatKeys[idx]]) || 0;
-  //           // Show value even if 0, if vendor name exists
-  //           if (vendorNames[idx]) {
-  //             return `${brandConfig?.currencyName} ${(omr + vat).toFixed(
-  //               brandConfig?.currencyName === "OMR" ? 3 : 2
-  //             )}`;
-  //           }
-  //           return null;
-  //         })
-  //         .filter((v, idx) => vendorNames[idx]); // Only for slots with vendor name
-
-  //       if (amounts.length > 1) {
-  //         return amounts
-  //           .map((amt, idx) => `${idx + 1}. ${amt}`)
-  //           .join("\r\n\r\n");
-  //       } else if (amounts.length === 1) {
-  //         return amounts[0];
-  //       } else {
-  //         return "";
-  //       }
-  //     })(),
-  //   }));
-  //   // Add Total Amount row
-  //   excelData.push({
-  //     Sales: "Total Amount",
-  //     Amount: totalCustomerAmount.toFixed(
-  //       brandConfig?.currencyName === "OMR" ? 3 : 2
-  //     ),
-  //     Purchase: "Total Amount",
-  //     "Amount ": totalVendorAmount.toFixed(
-  //       brandConfig?.currencyName === "OMR" ? 3 : 2
-  //     ),
-  //   });
-  //   // Add Profit/Loss row
-  //   excelData.push({
-  //     Sales: "",
-  //     Amount: "",
-  //     Purchase: profitOrLoss >= 0 ? "Profit" : "Loss",
-  //     "Amount ": Number(profitOrLoss).toFixed(
-  //       brandConfig?.currencyName === "OMR" ? 3 : 2
-  //     ),
-  //   });
-  //   const XLSX = require("xlsx");
-  //   const worksheet = XLSX.utils.json_to_sheet(excelData);
-  //   worksheet["!cols"] = [
-  //     { wch: 25 }, // Sales
-  //     { wch: 15 }, // Amount
-  //     { wch: 100 }, // Purchase (wider for vendor list)
-  //     { wch: 10 }, // Amount
-  //   ];
-
-  //   // Set wrapText for the Purchase column
-  //   // Object.keys(worksheet).forEach((cell) => {
-  //   //   if (cell.startsWith("C") && worksheet[cell] && worksheet[cell].v) {
-  //   //     if (!worksheet[cell].s) worksheet[cell].s = {};
-  //   //     worksheet[cell].s.alignment = { wrapText: true };
-  //   //   }
-  //   // });
-
-  //   const workbook = XLSX.utils.book_new();
-  //   XLSX.utils.book_append_sheet(workbook, worksheet, "CostCenterBreakup");
-  //   XLSX.writeFile(workbook, "Cost Center Breakup Report.xlsx");
-  // };
-
   // Create Excel using ExcelJS for Cost Center Breakup
   const createNewExcel = async () => {
     if (!services || services.length === 0) return;
@@ -492,9 +373,7 @@ const CostCenterBreakup = () => {
               ? service[vatKeys[idx]]
               : parseFloat(service[vatKeys[idx]]) || 0;
           if (vendorNames[idx]) {
-            return `${brandConfig?.currencyName} ${(omr + vat).toFixed(
-              brandConfig?.currencyName === "OMR" ? 3 : 2
-            )}`;
+            return `OMR ${(omr + vat).toFixed(3)}`;
           }
           return null;
         })
@@ -512,9 +391,9 @@ const CostCenterBreakup = () => {
 
       const row = worksheet.addRow({
         sales: index === 0 ? `Invoice No : ${invoiceId}` : "",
-        customerAmount: `${brandConfig?.currencyName} ${(
+        customerAmount: `OMR ${(
           service.customerOMR + service.customerVAT
-        ).toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2)}`,
+        ).toFixed(3)}`,
         purchase: vendorNamesDisplay,
         vendorAmount: vendorAmountsDisplay,
       });
@@ -535,15 +414,9 @@ const CostCenterBreakup = () => {
     // Add Total Amount row
     const totalRow = worksheet.addRow({
       sales: "Total Amount",
-      customerAmount: `${
-        brandConfig?.currencyName
-      } ${totalCustomerAmount.toFixed(
-        brandConfig?.currencyName === "OMR" ? 3 : 2
-      )}`,
+      customerAmount: `OMR ${totalCustomerAmount.toFixed(3)}`,
       purchase: "Total Amount",
-      vendorAmount: `${brandConfig?.currencyName} ${totalVendorAmount.toFixed(
-        brandConfig?.currencyName === "OMR" ? 3 : 2
-      )}`,
+      vendorAmount: `OMR ${totalVendorAmount.toFixed(3)}`,
     });
     // totalRow.font = { bold: true };
 
@@ -552,9 +425,7 @@ const CostCenterBreakup = () => {
       sales: "",
       customerAmount: "",
       purchase: profitOrLoss >= 0 ? "Profit" : "Loss",
-      vendorAmount: `${brandConfig?.currencyName} ${Number(
-        profitOrLoss
-      ).toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2)}`,
+      vendorAmount: `OMR ${Number(profitOrLoss).toFixed(3)}`,
     });
     // profitLossRow.font = { bold: true };
     // profitLossRow.getCell("purchase").font = {

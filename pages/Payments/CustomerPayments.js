@@ -16,7 +16,6 @@ import Swal from "sweetalert2";
 import "../../css/payment.css";
 import PopUp from "../PopUp";
 import ViewCustomerVoucher from "./ViewCustomerVoucher";
-import brandConfig from "../../config/brandConfig";
 const CustomerPayments = () => {
   const Group = require("../../assets/images/payments.png");
   const paymentIcon = require("../../assets/images/payment-icon.png");
@@ -92,28 +91,14 @@ const CustomerPayments = () => {
       const Listpayments = await getPayments(payload);
       console.log(Listpayments, "Listpayments");
       setCustomerpayment(Listpayments?.payments || []);
-      setInvoiceAmount(
-        (Listpayments?.totalInvoiceAmount || 0).toFixed(
-          brandConfig?.currencyName === "OMR" ? 3 : 2
-        )
-      );
-      setPaidAmount(
-        (Listpayments?.paidAmount || 0).toFixed(
-          brandConfig?.currencyName === "OMR" ? 3 : 2
-        )
-      );
-      setDiscountAmount(
-        (Listpayments?.discountAmountOMR || 0).toFixed(
-          brandConfig?.currencyName === "OMR" ? 3 : 2
-        )
-      );
+      setInvoiceAmount((Listpayments?.totalInvoiceAmount || 0).toFixed(3));
+      setPaidAmount((Listpayments?.paidAmount || 0).toFixed(3));
+      setDiscountAmount((Listpayments?.discountAmountOMR || 0).toFixed(3));
       const totalAmount = Listpayments?.totalInvoiceAmount || 0;
       const amountpaid = Listpayments?.paidAmount || 0;
       const discount = Listpayments?.discountAmountOMR || 0;
       const balance = totalAmount - amountpaid - discount;
-      setBalanceAmount(
-        parseFloat(balance.toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2))
-      );
+      setBalanceAmount(parseFloat(balance.toFixed(3)));
     } catch (error) {
       console.log("Error in Api", error);
     }
@@ -301,7 +286,7 @@ const CustomerPayments = () => {
     },
     {
       field: "discountAmount",
-      headerName: `Discount (${brandConfig?.currencyName})`,
+      headerName: `Discount (OMR)`,
       flex: 2,
       minWidth: 100,
     },
@@ -320,31 +305,13 @@ const CustomerPayments = () => {
       renderCell: (params) => (
         <>
           <div style={{ display: "flex", alignItems: "center" }}>
-            {/* Only show View button if Paid Amount column is empty or zero */}
-            {brandConfig?.title == "Trans Wave" && (
-              <>
-                {(!params.row.amount || params.row.amount === 0) && (
-                  <button
-                    className="btn btna submitpaymentbutton btnfsize"
-                    onClick={() => handleView(params.row)}
-                    style={{ marginRight: "8px" }}
-                  >
-                    View
-                  </button>
-                )}
-              </>
-            )}
-            {brandConfig?.title == "Trans Ocean" && (
-              <>
-                <button
-                  className="btn btna submitpaymentbutton btnfsize"
-                  onClick={() => handleView(params.row)}
-                  style={{ marginRight: "8px" }}
-                >
-                  View
-                </button>
-              </>
-            )}
+            <button
+              className="btn btna submitpaymentbutton btnfsize"
+              onClick={() => handleView(params.row)}
+              style={{ marginRight: "8px" }}
+            >
+              View
+            </button>
             <IconButton color="primary" onClick={() => handleEdit(params.row)}>
               <EditIcon sx={{ fontSize: "19px" }} />
             </IconButton>
@@ -564,15 +531,12 @@ const CustomerPayments = () => {
           <div className=" d-flex">
             <div className="totalinvociecustomer">
               {" "}
-              Total Invoice Amount({brandConfig?.currencyName}):
+              Total Invoice Amount(OMR):
             </div>{" "}
             <div className="amountpayment"> {totalInvoiceAmount} </div>
           </div>
           <div className=" d-flex">
-            <div className="totalinvociecustomer">
-              {" "}
-              Paid Amount({brandConfig?.currencyName}):
-            </div>{" "}
+            <div className="totalinvociecustomer"> Paid Amount(OMR):</div>{" "}
             <div className="amountpayment"> {paidAmount} </div>
           </div>
           <div className=" d-flex">
@@ -580,10 +544,7 @@ const CustomerPayments = () => {
             <div className="amountpayment"> {discountAmount} </div>
           </div>
           <div className=" d-flex">
-            <div className="totalinvociecustomer">
-              {" "}
-              Balance Amount({brandConfig?.currencyName}):
-            </div>{" "}
+            <div className="totalinvociecustomer"> Balance Amount(OMR):</div>{" "}
             <div className="amountpayment"> {balanceAmount} </div>
           </div>
 

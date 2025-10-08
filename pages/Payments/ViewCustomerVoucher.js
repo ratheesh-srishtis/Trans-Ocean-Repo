@@ -9,7 +9,6 @@ import {
 import { saveAs } from "file-saver";
 import "../../css/viewvoucher.css";
 import moment from "moment";
-import brandConfig from "../../config/brandConfig";
 import { useMedia } from "../../context/MediaContext";
 const { ToWords } = require("to-words");
 const toWords = new ToWords();

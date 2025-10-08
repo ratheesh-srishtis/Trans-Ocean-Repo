@@ -16,7 +16,6 @@ import {
 import Loader from "../Loader";
 import PopUp from ".././PopUp";
 import "../../css/payment.css";
-import brandConfig from "../../config/brandConfig";
 const AddCustomerPayment = ({
   open,
   onClose,
@@ -555,7 +554,7 @@ const AddCustomerPayment = ({
                       className="form-label"
                     >
                       {" "}
-                      Total Paid Amount({brandConfig?.currencyName}):
+                      Total Paid Amount(OMR):
                     </label>
                   ) : (
                     <label
@@ -563,7 +562,7 @@ const AddCustomerPayment = ({
                       className="form-label"
                     >
                       {" "}
-                      Balance Dues({brandConfig?.currencyName}):
+                      Balance Dues(OMR):
                     </label>
                   )}
                   <input
@@ -621,9 +620,7 @@ const AddCustomerPayment = ({
                     value={formData.currency}
                   >
                     <option value="">Choose Currency </option>
-                    <option value={brandConfig?.currencyName?.toLowerCase()}>
-                      {brandConfig?.currencyName}{" "}
-                    </option>
+                    <option value={"omr"}>OMR </option>
                     <option value="usd">USD </option>
                   </select>
                   {errors.currency && (
@@ -685,7 +682,6 @@ const AddCustomerPayment = ({
                   </div>
                 </>
               )}
-             
             </div>
 
             <div className="row">
@@ -784,13 +780,13 @@ const AddCustomerPayment = ({
                   </>
                 )}
             </div>
-<div className="row">
-   {(buttonType === "addreceipt" ||
+            <div className="row">
+              {(buttonType === "addreceipt" ||
                 buttonType === "addvenderpayment") && (
                 <div className="col-6 mb-3 align-items-start">
                   <div className="">
                     <label htmlFor="discountAmount" className="form-label">
-                      Discount ({brandConfig?.currencyName})
+                      Discount (OMR)
                     </label>
                     <input
                       name="discountAmount"
@@ -817,7 +813,7 @@ const AddCustomerPayment = ({
                   </div>
                 </div>
               )}
-</div>
+            </div>
             {/* {(buttonType === "addreceipt" ||
               buttonType === "addvenderpayment") && (
               <>

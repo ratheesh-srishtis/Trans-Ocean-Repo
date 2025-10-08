@@ -10,7 +10,6 @@ import {
 } from "../services/apiSettings";
 import { getAllDesignations } from "../services/apiEmployee";
 import PopUp from "../pages/PopUp";
-import brandConfig from "../config/brandConfig";
 const AddAnchorageStay = ({
   open,
   onAddRole,
@@ -83,8 +82,7 @@ const AddAnchorageStay = ({
     if (!formData.days) newErrors.days = "Days is required";
     if (!formData.description)
       newErrors.description = "Description is required";
-    if (!formData.chargeOMR)
-      newErrors.chargeOMR = `Charge ${brandConfig?.currencyName} is required`;
+    if (!formData.chargeOMR) newErrors.chargeOMR = `Charge OMR is required`;
     if (!formData.chargeUSD) newErrors.chargeUSD = "Charge USD is required";
     if (!formData.order) newErrors.order = "Order is required";
 
@@ -222,16 +220,16 @@ const AddAnchorageStay = ({
                     htmlFor="exampleFormControlInput1"
                     className="form-label"
                   >
-                    Charge {brandConfig?.currencyName}
+                    Charge OMR
                     <span className="required"> * </span>:
                   </label>
 
                   <input
-                    name={`charge${brandConfig?.currencyName}`}
+                    name={`chargeOMR`}
                     type="number"
                     className="form-control vessel-voyage"
                     id="exampleFormControlInput1"
-                    placeholder={`charge ${brandConfig?.currencyName}`}
+                    placeholder={`charge OMR`}
                     onChange={handleChange}
                     value={formData.chargeOMR}
                   ></input>

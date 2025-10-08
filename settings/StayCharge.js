@@ -16,7 +16,6 @@ import {
 import Swal from "sweetalert2";
 import PopUp from "../pages/PopUp";
 import { Tooltip } from "@mui/material";
-import brandConfig from "../config/brandConfig";
 import Loader from "../pages/Loader";
 const StayCharge = ({ portName, onClick }) => {
   const Group = require("../assets/images/Reports.png");
@@ -63,7 +62,7 @@ const StayCharge = ({ portName, onClick }) => {
     { field: "days", headerName: "Days", flex: 1.2 },
     {
       field: `chargeOMR`,
-      headerName: `Charge ${brandConfig?.currencyName}`,
+      headerName: `Charge OMR`,
       flex: 1.2,
     },
     { field: "chargeUSD", headerName: "Charge USD", flex: 1.2 },

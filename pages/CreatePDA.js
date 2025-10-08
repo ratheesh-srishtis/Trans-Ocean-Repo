@@ -1767,7 +1767,7 @@ const CreatePDA = ({
                       <input
                         type="text"
                         name="berth"
-                        className="form-control vessel-voyage voyageblock timeslotnew"
+                        className="form-control vessel-voyage voyageblock timespace"
                         id="exampleFormControlInput1"
                         placeholder="00"
                         value={etaHours}
@@ -1776,7 +1776,7 @@ const CreatePDA = ({
                       <input
                         type="text"
                         name="berth"
-                        className="form-control vessel-voyage voyageblock timeslotnew"
+                        className="form-control vessel-voyage voyageblock timespace"
                         id="exampleFormControlInput1"
                         placeholder="00"
                         value={etaMinutes}
@@ -1835,7 +1835,7 @@ const CreatePDA = ({
                       <input
                         type="text"
                         name="berth"
-                        className="form-control vessel-voyage voyageblock timeslotnew"
+                        className="form-control vessel-voyage voyageblock timespace"
                         id="exampleFormControlInput1"
                         placeholder="00"
                         value={etdHours}
@@ -1844,7 +1844,7 @@ const CreatePDA = ({
                       <input
                         type="text"
                         name="berth"
-                        className="form-control vessel-voyage voyageblock timeslotnew"
+                        className="form-control vessel-voyage voyageblock timespace"
                         id="exampleFormControlInput1"
                         placeholder="00"
                         value={etdMinutes}
@@ -1917,7 +1917,7 @@ const CreatePDA = ({
                     <input
                       type="text"
                       name=""
-                      className="form-control vessel-voyage voyageblock"
+                      className="form-control vessel-voyage voyageblock "
                       id="exampleFormControlInput1"
                       placeholder=""
                       value={opsByValue}

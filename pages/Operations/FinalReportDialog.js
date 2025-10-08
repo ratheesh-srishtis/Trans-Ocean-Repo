@@ -17,7 +17,6 @@ import {
 } from "../../services/apiService";
 import { useRef } from "react";
 import moment from "moment";
-import brandConfig from "../../config/brandConfig";
 import { useMedia } from "../../context/MediaContext";
 const FinalReportDialog = ({ open, onClose, pdaId, ports }) => {
   const [serviceReports, setServiceReports] = useState([]);

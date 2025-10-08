@@ -25,7 +25,6 @@ import {
 } from "../services/apiService";
 import moment from "moment";
 import PopUp from "./PopUp";
-import brandConfig from "../config/brandConfig";
 const PdaDialog = ({
   open,
   onClose,
@@ -123,15 +122,9 @@ const PdaDialog = ({
 
   const formattedTotals = {
     quantity: totalValues?.quantity,
-    customerOMR: totalValues?.customerOMR?.toFixed(
-      brandConfig?.currencyName === "OMR" ? 3 : 2
-    ),
-    customerVAT: totalValues?.customerVAT?.toFixed(
-      brandConfig?.currencyName === "OMR" ? 3 : 2
-    ),
-    customerTotalUSD: totalValues?.customerTotalUSD?.toFixed(
-      brandConfig?.currencyName === "OMR" ? 3 : 2
-    ),
+    customerOMR: totalValues?.customerOMR?.toFixed(3),
+    customerVAT: totalValues?.customerVAT?.toFixed(3),
+    customerTotalUSD: totalValues?.customerTotalUSD?.toFixed(3),
   };
 
   const [fetchedCharges, setFetchedCharges] = useState(new Set());
@@ -405,13 +398,9 @@ const PdaDialog = ({
                 <th className="slstyl">Sl.No</th>
                 <th className="slstyl">Particulars</th>
                 <th className="slstyl">Quantity</th>
-                <th className="omrstyl">
-                  Amount ({brandConfig?.currencyName})
-                </th>
+                <th className="omrstyl">Amount (OMR)</th>
                 <th className="omrstyl">VAT AMOUNT</th>
-                <th className="omrstyl">
-                  TOTAL AMOUNT ({brandConfig?.currencyName})
-                </th>
+                <th className="omrstyl">TOTAL AMOUNT (OMR)</th>
                 <th className="omrstyl">TOTAL AMOUNT (USD)</th>
               </tr>
             </thead>
@@ -427,25 +416,19 @@ const PdaDialog = ({
                       <td className="stylq">{charge?.quantity}</td>
 
                       <td className="stylq">
-                        {charge?.customerOMR?.toFixed(
-                          brandConfig?.currencyName === "OMR" ? 3 : 2
-                        )}
+                        {charge?.customerOMR?.toFixed(3)}
                       </td>
                       <td className="stylq">
-                        {charge?.customerVAT?.toFixed(
-                          brandConfig?.currencyName === "OMR" ? 3 : 2
-                        )}
+                        {charge?.customerVAT?.toFixed(3)}
                       </td>
                       <td className="stylq">
                         {(
                           parseFloat(charge?.customerOMR) +
                           parseFloat(charge?.customerVAT)
-                        )?.toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2)}
+                        )?.toFixed(3)}
                       </td>
                       <td className="stylq">
-                        {charge?.customerTotalUSD?.toFixed(
-                          brandConfig?.currencyName === "OMR" ? 3 : 2
-                        )}
+                        {charge?.customerTotalUSD?.toFixed(3)}
                       </td>
                     </tr>
                     {charge?.remark && (
@@ -470,7 +453,7 @@ const PdaDialog = ({
                   {(
                     parseFloat(formattedTotals?.customerOMR) +
                     parseFloat(formattedTotals?.customerVAT)
-                  )?.toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2)}
+                  )?.toFixed(3)}
                 </td>
                 <td className="stylt">{formattedTotals?.customerTotalUSD}</td>
               </tr>
@@ -503,7 +486,7 @@ const PdaDialog = ({
                       <th className="stylk">SI NO</th>
                       <th className="stylk">Days</th>
                       <th className="styll">Description</th>
-                      <th className="stylk">{brandConfig?.currencyName}</th>
+                      <th className="stylk">OMR</th>
                       <th className="stylk">USD</th>
                     </tr>
                   </thead>
@@ -513,16 +496,8 @@ const PdaDialog = ({
                         <td className="stylk">{index + 1}</td>
                         <td className="stylk">{item?.days}</td>
                         <td className="stylm">{item?.description}</td>
-                        <td className="stylq">
-                          {item?.chargeOMR?.toFixed(
-                            brandConfig?.currencyName === "OMR" ? 3 : 2
-                          )}
-                        </td>
-                        <td className="stylq">
-                          {item?.chargeUSD?.toFixed(
-                            brandConfig?.currencyName === "OMR" ? 3 : 2
-                          )}
-                        </td>
+                        <td className="stylq">{item?.chargeOMR?.toFixed(3)}</td>
+                        <td className="stylq">{item?.chargeUSD?.toFixed(3)}</td>
                       </tr>
                     ))}
 
@@ -591,41 +566,18 @@ const PdaDialog = ({
           )}
 
           <div>
-            {brandConfig?.title == "Trans Ocean" && (
-              <>
-                <div className="payment">
-                  Payment:
-                  <br /> Payment in advance prior to vessel arrival as per below
-                  bank account details:
-                  <br /> OUR BANKING ACCOUNT DETAILS
-                  <br /> TRANS WAVE MARITIME SERVICES LLC
-                  <br /> {companyBankDetails?.bankName}
-                  <br /> {companyBankDetails?.bankAddress}
-                  <br /> A/C NUMBER:- {companyBankDetails?.accountNumberOMR} (
-                  {brandConfig?.currencyName})
-                  <br /> A/C NUMBER:-{companyBankDetails?.accountNumberUSD}{" "}
-                  (USD)
-                  <br /> SWIFT CODE: - {companyBankDetails?.swiftCode}
-                </div>
-              </>
-            )}
-            {brandConfig?.title == "Trans Wave" && (
-              <>
-                <div className="payment">
-                  Payment:
-                  <br /> Payment in advance prior to vessel arrival as per below
-                  bank account details:
-                  <br /> TRANS WAVE MARINE SHIPPING SERVICES L.L.C
-                  <br /> MASHREQ BANK PSC
-                  <br /> BURJUMAN
-                  <br /> A/C NUMBER:- 019101496540 (USD)
-                  <br /> IBAN:- AE100330000019101496540 (USD)
-                  <br /> A/C NUMBER:- 019101496539 (AED)
-                  <br /> IBAN:- AE370330000019101496539 (AED)
-                  <br /> SWIFT CODE: - BOMLAEAD
-                </div>
-              </>
-            )}
+            <div className="payment">
+              Payment:
+              <br /> Payment in advance prior to vessel arrival as per below
+              bank account details:
+              <br /> OUR BANKING ACCOUNT DETAILS
+              <br /> TRANS OCEAN MARITIME SERVICES LLC
+              <br /> {companyBankDetails?.bankName}
+              <br /> {companyBankDetails?.bankAddress}
+              <br /> A/C NUMBER:- {companyBankDetails?.accountNumberOMR} (OMR)
+              <br /> A/C NUMBER:-{companyBankDetails?.accountNumberUSD} (USD)
+              <br /> SWIFT CODE: - {companyBankDetails?.swiftCode}
+            </div>
           </div>
           <table className="tabstyle">
             <thead>

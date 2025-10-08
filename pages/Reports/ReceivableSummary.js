@@ -14,7 +14,6 @@ import { DataGrid } from "@mui/x-data-grid";
 import "react-datepicker/dist/react-datepicker.css";
 import Swal from "sweetalert2";
 import { Box, Typography } from "@mui/material";
-import brandConfig from "../../config/brandConfig";
 const ReceivableSummary = () => {
   const [reportList, setReportList] = useState([]);
   const [jobIdList, setJobIdList] = useState([]);
@@ -204,9 +203,7 @@ const ReceivableSummary = () => {
     const customer = report.customer.length > 0 ? report.customer[0] : null;
     let totalAmount = Number(report.totalAmountOMR) || 0;
     let paidAmount = Number(report.paidOMR) || 0;
-    const amountOMR = (totalAmount - paidAmount).toFixed(
-      brandConfig?.currencyName === "OMR" ? 3 : 2
-    );
+    const amountOMR = (totalAmount - paidAmount).toFixed(3);
     const remark = customer ? customer.reportRemark : "";
     const remarkDate =
       remark && customer?.remarkDate
@@ -216,7 +213,7 @@ const ReceivableSummary = () => {
     return {
       id: index,
       customerName: customer ? customer.customerName : "-",
-      amountOMR: `${brandConfig?.currencyName} ${amountOMR}`,
+      amountOMR: `OMR ${amountOMR}`,
       remark: remark,
       remarkDate: remarkDate,
       report: report,
@@ -232,7 +229,7 @@ const ReceivableSummary = () => {
     },
     {
       field: "amountOMR",
-      headerName: `Amount in ${brandConfig?.currencyName}`,
+      headerName: `Amount in OMR`,
       flex: 2, // Takes up remaining space
     },
     {
@@ -339,9 +336,7 @@ const ReceivableSummary = () => {
     if (!reportList || reportList.length === 0) return;
     const excelData = reportList.map((report) => {
       const customer = report.customer.length > 0 ? report.customer[0] : null;
-      const amountOMR = (report.totalAmountOMR - report.paidOMR).toFixed(
-        brandConfig?.currencyName === "OMR" ? 3 : 2
-      );
+      const amountOMR = (report.totalAmountOMR - report.paidOMR).toFixed(3);
       const remark = customer ? customer.reportRemark : "";
       const remarkDate =
         remark && customer?.remarkDate
@@ -349,7 +344,7 @@ const ReceivableSummary = () => {
           : "N/A";
       return {
         "Customer Name": customer ? customer.customerName : "-",
-        "Amount in OMR": `${brandConfig?.currencyName} ${amountOMR}`,
+        "Amount in OMR": `OMR ${amountOMR}`,
         "Status/ Remarks": remark || "N/A",
         "Remark Date": remark ? remarkDate : "N/A",
       };
@@ -533,9 +528,7 @@ const ReceivableSummary = () => {
         <div className="total-receivable-card">
           <div className="total-receivable-content">
             <span className="label">Total Receivables:</span>
-            <span className="amount">
-              {brandConfig?.currencyName} {totalReceivableFormatted}
-            </span>
+            <span className="amount">OMR {totalReceivableFormatted}</span>
           </div>
         </div>
       </div>

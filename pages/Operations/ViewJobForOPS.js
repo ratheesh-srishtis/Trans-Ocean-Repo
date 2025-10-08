@@ -11,7 +11,6 @@ import {
 } from "../../services/apiService";
 import PopUp from "../PopUp";
 import { useAuth } from "../../context/AuthContext";
-import brandConfig from "../../config/brandConfig";
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
   return (
@@ -72,15 +71,9 @@ const ViewJobForOPS = ({
 
   const formattedTotals = {
     quantity: totalValues?.quantity,
-    customerOMR: totalValues?.customerOMR.toFixed(
-      brandConfig?.currencyName === "OMR" ? 3 : 2
-    ),
-    customerVAT: totalValues?.customerVAT.toFixed(
-      brandConfig?.currencyName === "OMR" ? 3 : 2
-    ),
-    customerTotalUSD: totalValues?.customerTotalUSD.toFixed(
-      brandConfig?.currencyName === "OMR" ? 3 : 2
-    ),
+    customerOMR: totalValues?.customerOMR.toFixed(3),
+    customerVAT: totalValues?.customerVAT.toFixed(3),
+    customerTotalUSD: totalValues?.customerTotalUSD.toFixed(3),
   };
   const vendorTotalValues = chargesArray?.reduce(
     (totals, charge) => {
@@ -96,15 +89,9 @@ const ViewJobForOPS = ({
   // Format totals after calculations
   const formattedVendorTotals = {
     quantity: vendorTotalValues?.quantity,
-    vendorOMR: vendorTotalValues?.vendorOMR.toFixed(
-      brandConfig?.currencyName === "OMR" ? 3 : 2
-    ),
-    vendorVAT: vendorTotalValues?.vendorVAT.toFixed(
-      brandConfig?.currencyName === "OMR" ? 3 : 2
-    ),
-    vendorTotalUSD: vendorTotalValues?.vendorTotalUSD.toFixed(
-      brandConfig?.currencyName === "OMR" ? 3 : 2
-    ),
+    vendorOMR: vendorTotalValues?.vendorOMR.toFixed(3),
+    vendorVAT: vendorTotalValues?.vendorVAT.toFixed(3),
+    vendorTotalUSD: vendorTotalValues?.vendorTotalUSD.toFixed(3),
   };
 
   // Function to handle edit action
@@ -289,7 +276,7 @@ const ViewJobForOPS = ({
                               : "tableheadcolor"
                           }
                         >
-                          Amount ({brandConfig?.currencyName})
+                          Amount (OMR)
                         </th>
                         <th
                           className={
@@ -309,7 +296,7 @@ const ViewJobForOPS = ({
                               : "tableheadcolor"
                           }
                         >
-                          Total {brandConfig?.currencyName}
+                          Total OMR
                         </th>
                         <th
                           className={
@@ -384,37 +371,15 @@ const ViewJobForOPS = ({
                               </td>
                               {from !== "view-operation" && (
                                 <>
-                                  <td>
-                                    {charge.customerOMR.toFixed(
-                                      brandConfig?.currencyName === "OMR"
-                                        ? 3
-                                        : 2
-                                    )}
-                                  </td>
-                                  <td>
-                                    {charge.customerVAT.toFixed(
-                                      brandConfig?.currencyName === "OMR"
-                                        ? 3
-                                        : 2
-                                    )}
-                                  </td>
+                                  <td>{charge.customerOMR.toFixed(3)}</td>
+                                  <td>{charge.customerVAT.toFixed(3)}</td>
                                   <td>
                                     {(
                                       parseFloat(charge.customerOMR) +
                                       parseFloat(charge.customerVAT)
-                                    ).toFixed(
-                                      brandConfig?.currencyName === "OMR"
-                                        ? 3
-                                        : 2
-                                    )}
+                                    ).toFixed(3)}
                                   </td>
-                                  <td>
-                                    {charge.customerTotalUSD.toFixed(
-                                      brandConfig?.currencyName === "OMR"
-                                        ? 3
-                                        : 2
-                                    )}
-                                  </td>
+                                  <td>{charge.customerTotalUSD.toFixed(3)}</td>
 
                                   {isAction == true && (
                                     <>
@@ -475,9 +440,7 @@ const ViewJobForOPS = ({
                               {(
                                 parseFloat(formattedTotals.customerOMR) +
                                 parseFloat(formattedTotals.customerVAT)
-                              ).toFixed(
-                                brandConfig?.currencyName === "OMR" ? 3 : 2
-                              )}
+                              ).toFixed(3)}
                             </td>
                             <td>{formattedTotals.customerTotalUSD}</td>
                             {isAction == true && (
@@ -564,7 +527,7 @@ const ViewJobForOPS = ({
                               : "tableheadcolor"
                           }
                         >
-                          Amount ({brandConfig?.currencyName})
+                          Amount (OMR)
                         </th>
                         <th
                           className={
@@ -584,7 +547,7 @@ const ViewJobForOPS = ({
                               : "tableheadcolor"
                           }
                         >
-                          Total {brandConfig?.currencyName}
+                          Total OMR
                         </th>
                         <th
                           className={
@@ -656,36 +619,7 @@ const ViewJobForOPS = ({
                                   ? charge.subchargeId?.subchargeName
                                   : charge?.subchargeName}
                               </td>
-                              {/* <td>
-                                {(() => {
-                                  const vendorIds = [
-                                    "vendorId",
-                                    "vendor2Id",
-                                    "vendor3Id",
-                                    "vendor4Id",
-                                  ]
-                                    .map((key) => charge[key])
-                                    .filter((id) => id);
 
-                                  if (vendorIds.length === 0) {
-                                    return <div>N/A</div>;
-                                  }
-
-                                  return vendorIds.map((id, idx) => {
-                                    const vendorName = vendors?.find(
-                                      (v) => v._id === id
-                                    )?.vendorName;
-                                    return (
-                                      <div key={id}>
-                                        {idx + 1}:{" "}
-                                        {vendorName && vendorName.trim()
-                                          ? vendorName
-                                          : ""}
-                                      </div>
-                                    );
-                                  });
-                                })()}
-                              </td> */}
                               <td>
                                 {(() => {
                                   // Collect valid vendor IDs and their corresponding isPrivateVendor flags
@@ -803,10 +737,7 @@ const ViewJobForOPS = ({
                                 <>
                                   <td>
                                     {(() => {
-                                      const decimalPlaces =
-                                        brandConfig?.currencyName === "OMR"
-                                          ? 3
-                                          : 2;
+                                      const decimalPlaces = 3;
                                       const vendorIds = [
                                         "vendorId",
                                         "vendor2Id",
@@ -856,10 +787,7 @@ const ViewJobForOPS = ({
 
                                   <td>
                                     {(() => {
-                                      const decimalPlaces =
-                                        brandConfig?.currencyName === "OMR"
-                                          ? 3
-                                          : 2;
+                                      const decimalPlaces = 3;
                                       const vendorIds = [
                                         "vendorId",
                                         "vendor2Id",
@@ -908,10 +836,7 @@ const ViewJobForOPS = ({
                                   </td>
                                   <td>
                                     {(() => {
-                                      const decimalPlaces =
-                                        brandConfig?.currencyName === "OMR"
-                                          ? 3
-                                          : 2;
+                                      const decimalPlaces = 3;
                                       const vendorIds = [
                                         "vendorId",
                                         "vendor2Id",
@@ -962,10 +887,7 @@ const ViewJobForOPS = ({
 
                                   <td>
                                     {(() => {
-                                      const decimalPlaces =
-                                        brandConfig?.currencyName === "OMR"
-                                          ? 3
-                                          : 2;
+                                      const decimalPlaces = 3;
                                       const vendorIds = [
                                         "vendorId",
                                         "vendor2Id",
@@ -1072,9 +994,7 @@ const ViewJobForOPS = ({
                                       totalOMR += val;
                                   });
                                 });
-                                return totalOMR.toFixed(
-                                  brandConfig?.currencyName === "OMR" ? 3 : 2
-                                );
+                                return totalOMR.toFixed(3);
                               })()}
                             </td>
                             {/* Vendor VAT Total: sum all vendorVAT, vendor2VAT, vendor3VAT, vendor4VAT for all charges */}
@@ -1093,9 +1013,7 @@ const ViewJobForOPS = ({
                                       totalVAT += val;
                                   });
                                 });
-                                return totalVAT.toFixed(
-                                  brandConfig?.currencyName === "OMR" ? 3 : 2
-                                );
+                                return totalVAT.toFixed(3);
                               })()}
                             </td>
                             {/* Vendor Total OMR: sum all (vendorOMR + vendorVAT), (vendor2OMR + vendor2VAT), ... for all charges */}
@@ -1130,9 +1048,7 @@ const ViewJobForOPS = ({
                                     if (sum !== 0) total += sum;
                                   });
                                 });
-                                return total.toFixed(
-                                  brandConfig?.currencyName === "OMR" ? 3 : 2
-                                );
+                                return total.toFixed(3);
                               })()}
                             </td>
                             {/* Vendor Total USD: sum all vendorTotalUSD, vendor2TotalUSD, vendor3TotalUSD, vendor4TotalUSD for all charges */}
@@ -1151,9 +1067,7 @@ const ViewJobForOPS = ({
                                       totalUSD += val;
                                   });
                                 });
-                                return totalUSD.toFixed(
-                                  brandConfig?.currencyName === "OMR" ? 3 : 2
-                                );
+                                return totalUSD.toFixed(3);
                               })()}
                             </td>
                             {isAction == true && (

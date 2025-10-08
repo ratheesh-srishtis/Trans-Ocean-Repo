@@ -20,7 +20,6 @@ import {
 import PopUp from "./PopUp";
 import { saveAs } from "file-saver";
 import CreditNoteMail from "./CreditNoteMail";
-import brandConfig from "../config/brandConfig";
 import { useAuth } from "../context/AuthContext";
 const ResponsiveDialog = ({
   open,
@@ -252,11 +251,7 @@ const ResponsiveDialog = ({
       setCreditNote(value);
       setIsUserInput(false);
       console.log(originalCustomerAmount, "originalCustomerAmount");
-      setCustomerAmount(
-        (originalCustomerAmount - value)?.toFixed(
-          brandConfig?.currencyName === "OMR" ? 3 : 2
-        )
-      ); // adjust from original
+      setCustomerAmount((originalCustomerAmount - value)?.toFixed(3)); // adjust from original
     }
   };
 
@@ -713,19 +708,11 @@ const ResponsiveDialog = ({
       console.log(total, "total customerAmount + customerVatAmount");
       // let customer_total_usd = Number(total * 2.62);
       let customer_total_usd;
-      if (brandConfig?.currencyName == "AED") {
-        customer_total_usd = Number(total / aedConversionRate);
-      } else if (brandConfig?.currencyName == "OMR") {
-        customer_total_usd = Number(total * 2.62);
-      }
-      setCustomerTotalUSD(
-        customer_total_usd.toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2)
-      );
+      customer_total_usd = Number(total * 2.62);
+      setCustomerTotalUSD(customer_total_usd.toFixed(3));
     }
     let total = Number(customerAmount) + Number(customerVatAmount);
-    setCustomerTotalOmr(
-      total.toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2)
-    );
+    setCustomerTotalOmr(total.toFixed(3));
   }, [customerAmount, customerVatAmount, isUserInput]);
 
   // Reset the user input flag whenever the value is updated programmatically
@@ -744,20 +731,12 @@ const ResponsiveDialog = ({
       // let vendor_total_usd = Number(total * 2.62);
       let vendor_total_usd;
 
-      if (brandConfig?.currencyName == "AED") {
-        vendor_total_usd = Number(total / aedConversionRate);
-      } else if (brandConfig?.currencyName == "OMR") {
-        vendor_total_usd = Number(total * 2.62);
-      }
+      vendor_total_usd = Number(total * 2.62);
 
-      setVendorTotalUSD(
-        vendor_total_usd.toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2)
-      );
+      setVendorTotalUSD(vendor_total_usd.toFixed(3));
     }
     let total = Number(vendorAmount) + Number(vendorVatAmount);
-    setVendorTotalOmr(
-      total.toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2)
-    );
+    setVendorTotalOmr(total.toFixed(3));
   }, [vendorAmount, vendorVatAmount, isVendorUserInput]);
 
   // useEffect(() => {
@@ -1128,7 +1107,7 @@ const ResponsiveDialog = ({
                             htmlFor="exampleFormControlInput1"
                             className="form-label"
                           >
-                            Amount({brandConfig?.currencyName}):
+                            Amount(OMR):
                             <span className="required"> * </span>
                           </label>
                           <input
@@ -1145,7 +1124,7 @@ const ResponsiveDialog = ({
                         {customerAmountError && (
                           <>
                             <div className="invalid">
-                              Please enter {brandConfig?.currencyName} amount
+                              Please enter OMR amount
                             </div>
                           </>
                         )}
@@ -1191,7 +1170,7 @@ const ResponsiveDialog = ({
                             htmlFor="exampleFormControlInput1"
                             className="form-label"
                           >
-                            Total {brandConfig?.currencyName}:
+                            Total OMR:
                           </label>
                           <input
                             type="number"
@@ -1279,7 +1258,7 @@ const ResponsiveDialog = ({
                             htmlFor="exampleFormControlInput1"
                             className="form-label"
                           >
-                            Amount({brandConfig?.currencyName}):
+                            Amount(OMR):
                           </label>
                           <input
                             type="number"
@@ -1338,7 +1317,7 @@ const ResponsiveDialog = ({
                             htmlFor="exampleFormControlInput1"
                             className="form-label"
                           >
-                            Total {brandConfig?.currencyName}:
+                            Total OMR:
                           </label>
                           <input
                             type="number"
@@ -1520,84 +1499,60 @@ const ResponsiveDialog = ({
                             </div>
 
                             <div className="omr col-6 table_seperation">
-                              <span className="marinehead">
-                                Amount ({brandConfig?.currencyName}):
-                              </span>
+                              <span className="marinehead">Amount (OMR):</span>
                               <span className="subvalue">
-                                {charge.customerOMR.toFixed(
-                                  brandConfig?.currencyName === "OMR" ? 3 : 2
-                                )}
+                                {charge.customerOMR.toFixed(3)}
                               </span>
                             </div>
                             <div className="omr col-6">
-                              <span className="marinehead">
-                                Amount ({brandConfig?.currencyName}):
-                              </span>
+                              <span className="marinehead">Amount (OMR):</span>
                               <span className="subvalue">
-                                {charge.vendorOMR.toFixed(
-                                  brandConfig?.currencyName === "OMR" ? 3 : 2
-                                )}
+                                {charge.vendorOMR.toFixed(3)}
                               </span>
                             </div>
 
                             <div className="vat col-6 table_seperation">
                               <span className="marinehead">VAT Amount:</span>
                               <span className="subvalue">
-                                {charge.customerVAT.toFixed(
-                                  brandConfig?.currencyName === "OMR" ? 3 : 2
-                                )}
+                                {charge.customerVAT.toFixed(3)}
                               </span>
                             </div>
                             <div className="vat col-6">
                               <span className="marinehead">VAT Amount:</span>
                               <span className="subvalue">
-                                {charge.vendorVAT.toFixed(
-                                  brandConfig?.currencyName === "OMR" ? 3 : 2
-                                )}
+                                {charge.vendorVAT.toFixed(3)}
                               </span>
                             </div>
 
                             <div className="omr col-6 table_seperation">
-                              <span className="marinehead">
-                                Total ({brandConfig?.currencyName}):
-                              </span>
+                              <span className="marinehead">Total (OMR):</span>
                               <span className="subvalue">
                                 {(
                                   Number(charge.customerOMR) +
                                   Number(charge.customerVAT)
-                                ).toFixed(
-                                  brandConfig?.currencyName === "OMR" ? 3 : 2
-                                )}
+                                ).toFixed(3)}
                               </span>
                             </div>
                             <div className="omr col-6">
-                              <span className="marinehead">
-                                Total ({brandConfig?.currencyName}):
-                              </span>
+                              <span className="marinehead">Total (OMR):</span>
                               <span className="subvalue">
                                 {(
                                   Number(charge.vendorOMR) +
                                   Number(charge.vendorVAT)
-                                ).toFixed(
-                                  brandConfig?.currencyName === "OMR" ? 3 : 2
-                                )}
+                                ).toFixed(3)}
                               </span>
                             </div>
 
                             <div className="vat col-6 table_seperation">
                               <span className="marinehead">Total USD:</span>
                               <span className="subvalue">
-                                {charge.customerTotalUSD.toFixed(
-                                  brandConfig?.currencyName === "OMR" ? 3 : 2
-                                )}
+                                {charge.customerTotalUSD.toFixed(3)}
                               </span>
                             </div>
                             <div className="vat col-6">
                               <span className="marinehead">Total USD:</span>
                               <span className="subvalue">
-                                {charge.vendorTotalUSD.toFixed(
-                                  brandConfig?.currencyName === "OMR" ? 3 : 2
-                                )}
+                                {charge.vendorTotalUSD.toFixed(3)}
                               </span>
                             </div>
 
@@ -2081,7 +2036,7 @@ const ResponsiveDialog = ({
                           htmlFor="exampleFormControlInput1"
                           className="form-label labelhead"
                         >
-                          Amount({brandConfig?.currencyName}):
+                          Amount(OMR):
                         </label>
                       </div>
                       <div className="col-7 justify-content-start ">
@@ -2138,7 +2093,7 @@ const ResponsiveDialog = ({
                           htmlFor="exampleFormControlInput1"
                           className="form-label labelhead"
                         >
-                          Total {brandConfig?.currencyName}:
+                          Total OMR:
                         </label>
                       </div>
                       <div className="col-7 d-flex justify-content-start ">
@@ -2248,7 +2203,7 @@ const ResponsiveDialog = ({
                           htmlFor="exampleFormControlInput1"
                           className="form-label labelhead"
                         >
-                          Amount({brandConfig?.currencyName}):
+                          Amount(OMR):
                         </label>
                       </div>
                       <div className="col-7  justify-content-start ">
@@ -2304,7 +2259,7 @@ const ResponsiveDialog = ({
                           htmlFor="exampleFormControlInput1"
                           className="form-label labelhead"
                         >
-                          Total {brandConfig?.currencyName}:
+                          Total OMR:
                         </label>
                       </div>
                       <div className="col-7 d-flex justify-content-start ">
