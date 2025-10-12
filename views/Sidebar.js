@@ -32,7 +32,9 @@ const Sidebar = () => {
   const userSettingsPermissions = loginResponse?.submenuPermission || [];
   const menuArr = [
     "profile",
+    "Profile", // Added uppercase version
     "leave",
+    "Leave", // Added uppercase version
     "dashboard",
     "quotations",
     "jobs",
@@ -67,9 +69,11 @@ const Sidebar = () => {
         navigate("/dashboard"); // Replace with your actual route
         break;
       case "profile":
+      case "Profile": // Handle uppercase version
         navigate("/profile"); // Replace with your actual route
         break;
       case "leave":
+      case "Leave": // Handle uppercase version
         navigate("/leave"); // Replace with your actual route
         break;
       case "quotations":
@@ -199,7 +203,9 @@ const Sidebar = () => {
   const menuItems = {
     dashboard: { label: "Dashboard", icon: "bi bi-pie-chart" },
     profile: { label: "Profile", icon: "bi bi-people" },
+    Profile: { label: "Profile", icon: "bi bi-people" }, // Added uppercase version
     leave: { label: "Leave", icon: "bi bi-bar-chart" },
+    Leave: { label: "Leave", icon: "bi bi-bar-chart" }, // Added uppercase version
     quotations: { label: "Quotations", icon: "bi bi-receipt-cutoff" },
     jobs: { label: "Jobs", icon: "bi bi-briefcase" },
     payments: { label: "Payments", icon: "bi bi-cash-stack" },
@@ -230,7 +236,8 @@ const Sidebar = () => {
   }, [userPermissions]);
   useEffect(() => {
     console.log(userSettingsPermissions, "userSettingsPermissions");
-  }, [userSettingsPermissions]);
+    console.log(menuItems, "menuItems");
+  }, [userSettingsPermissions, menuItems]);
 
   return (
     <>

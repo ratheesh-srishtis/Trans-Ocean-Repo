@@ -47,8 +47,8 @@ const ViewCustomerVoucher = ({ open, onClose, getvoucher }) => {
         currencyUnit = "Dollars";
         break;
       case "OMR":
-        currencyFullName = "Omani Rial";
-        currencyUnit = "Rials";
+        currencyFullName = "Omani Riyal";
+        currencyUnit = "Riyals";
         break;
       default:
         currencyFullName =

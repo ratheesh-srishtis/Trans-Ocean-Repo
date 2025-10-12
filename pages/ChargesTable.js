@@ -74,7 +74,7 @@ const ChargesTable = ({
     quantity: totalValues?.quantity,
     customerOMR: totalValues?.customerOMR.toFixed(3),
     customerVAT: totalValues?.customerVAT.toFixed(3),
-    customerTotalUSD: totalValues?.customerTotalUSD.toFixed(3),
+    customerTotalUSD: totalValues?.customerTotalUSD.toFixed(2),
   };
   const vendorTotalValues = chargesArray?.reduce(
     (totals, charge) => {
@@ -92,7 +92,7 @@ const ChargesTable = ({
     quantity: vendorTotalValues?.quantity,
     vendorOMR: vendorTotalValues?.vendorOMR.toFixed(3),
     vendorVAT: vendorTotalValues?.vendorVAT.toFixed(3),
-    vendorTotalUSD: vendorTotalValues?.vendorTotalUSD.toFixed(3),
+    vendorTotalUSD: vendorTotalValues?.vendorTotalUSD.toFixed(2),
   };
 
   // Function to handle edit action
@@ -380,7 +380,7 @@ const ChargesTable = ({
                                       parseFloat(charge.customerVAT)
                                     ).toFixed(3)}
                                   </td>
-                                  <td>{charge.customerTotalUSD.toFixed(3)}</td>
+                                  <td>{charge.customerTotalUSD.toFixed(2)}</td>
 
                                   {isAction == true && (
                                     <>
@@ -441,7 +441,7 @@ const ChargesTable = ({
                               {(
                                 parseFloat(formattedTotals.customerOMR) +
                                 parseFloat(formattedTotals.customerVAT)
-                              ).toFixed(3)}
+                              ).toFixed(2)}
                             </td>
                             <td>{formattedTotals.customerTotalUSD}</td>
                             {isAction == true && (
@@ -1041,7 +1041,7 @@ const ChargesTable = ({
                                       totalUSD += val;
                                   });
                                 });
-                                return totalUSD.toFixed(3);
+                                return totalUSD.toFixed(2);
                               })()}
                             </td>
                             {isAction == true && (

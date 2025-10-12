@@ -66,6 +66,7 @@ import Profile from "../settings/Profile";
 import EmployeeModification from "../pages/Hr/EmployeeModification";
 import ViewEmployeeDetails from "../pages/Hr/ViewEmployeeDetails";
 import LeaveRequests from "../pages/Hr/LeaveRequests";
+import Leave from "../pages/Hr/Leave";
 const Content = ({ onNotFound }) => {
   const { loginResponse } = useAuth();
 
@@ -209,6 +210,7 @@ const Content = ({ onNotFound }) => {
     "/employee-details-modifications",
     "/view-employee-details",
     "/leave-requests",
+    "/leave",
   ];
 
   useEffect(() => {
@@ -254,6 +256,7 @@ const Content = ({ onNotFound }) => {
       <Route path="/workcalendar" element={<WorkCalendar />} />
       <Route path="/desiginations" element={<Desiginations />} />
       <Route path="/employee-leaves" element={<EmployeeLeaves />} />
+      <Route path="/leave" element={<Leave loginResponse={loginResponse} />} />
       <Route
         path="/employee-details-modifications"
         element={<EmployeeModification />}

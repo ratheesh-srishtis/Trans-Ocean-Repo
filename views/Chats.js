@@ -414,7 +414,7 @@ const Chats = () => {
                     {chatUsers.map((user, index) => (
                       <div
                         key={index}
-                        className={`messagemain mb-3 mt-3 ${
+                        className={`messagemain chatnewsty mb-3 mt-3 ${
                           recieverType === user.type?.toLowerCase()
                             ? "activechat"
                             : ""
@@ -428,14 +428,17 @@ const Chats = () => {
                         <div className="user-logo">
                           <img className="dept-logo" src={user?.logo} alt="" />
                         </div>
-                        <div className="about">
-                          <div className="chathead">{user.type}</div>
-                        </div>
-                        <div className="msgcontentandnumber">
-                          <div className="msgcontent text-truncate">
-                            {user.message}
+                        <div>
+                          {" "}
+                          <div className="about">
+                            <div className="chathead">{user.type}</div>
                           </div>
-                          <div className="msgnumber">{user.unread}</div>
+                          <div className="msgcontentandnumber">
+                            <div className="msgcontent text-truncate">
+                              {user.message}
+                            </div>
+                            <div className="msgnumber">{user.unread}</div>
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -514,7 +517,7 @@ const Chats = () => {
                                     ? "other-message float-right "
                                     : "my-message"
                                 }`}
-                                style={{ whiteSpace: "pre-wrap" }} // This is the key fix
+                                style={{ whiteSpace: "normal" }} // This is the key fix
                               >
                                 {chat.message}
                               </div>

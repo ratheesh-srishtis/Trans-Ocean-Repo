@@ -236,7 +236,7 @@ const OpsChargesTable = ({
                           parseFloat(charge.customerVAT)
                         ).toFixed(3)}
                       </td>
-                      <td>{charge.customerTotalUSD.toFixed(3)}</td>
+                      <td>{charge.customerTotalUSD.toFixed(2)}</td>
                     </>
                   )}
 

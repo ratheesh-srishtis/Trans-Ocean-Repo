@@ -124,7 +124,7 @@ const PdaDialog = ({
     quantity: totalValues?.quantity,
     customerOMR: totalValues?.customerOMR?.toFixed(3),
     customerVAT: totalValues?.customerVAT?.toFixed(3),
-    customerTotalUSD: totalValues?.customerTotalUSD?.toFixed(3),
+    customerTotalUSD: totalValues?.customerTotalUSD?.toFixed(2),
   };
 
   const [fetchedCharges, setFetchedCharges] = useState(new Set());
@@ -453,7 +453,7 @@ const PdaDialog = ({
                   {(
                     parseFloat(formattedTotals?.customerOMR) +
                     parseFloat(formattedTotals?.customerVAT)
-                  )?.toFixed(3)}
+                  )?.toFixed(2)}
                 </td>
                 <td className="stylt">{formattedTotals?.customerTotalUSD}</td>
               </tr>
@@ -497,7 +497,7 @@ const PdaDialog = ({
                         <td className="stylk">{item?.days}</td>
                         <td className="stylm">{item?.description}</td>
                         <td className="stylq">{item?.chargeOMR?.toFixed(3)}</td>
-                        <td className="stylq">{item?.chargeUSD?.toFixed(3)}</td>
+                        <td className="stylq">{item?.chargeUSD?.toFixed(2)}</td>
                       </tr>
                     ))}
 

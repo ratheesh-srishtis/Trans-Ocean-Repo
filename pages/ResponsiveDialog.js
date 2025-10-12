@@ -668,7 +668,7 @@ const ResponsiveDialog = ({
       let total = Number(customerAmount) + Number(customerVatAmount);
       let customer_total_usd;
       customer_total_usd = Number(total * 2.62);
-      setCustomerTotalUSD(customer_total_usd.toFixed(3));
+      setCustomerTotalUSD(customer_total_usd.toFixed(2));
     }
     let total = Number(customerAmount) + Number(customerVatAmount);
     setCustomerTotalOmr(total.toFixed(3));
@@ -952,7 +952,7 @@ const ResponsiveDialog = ({
             if (!updatedSection._userSetVendorTotalUSD) {
               let vendor_total_usd = 0;
               vendor_total_usd = Number((amount + vat) * 2.62);
-              updatedSection.vendorTotalUSD = vendor_total_usd.toFixed(3);
+              updatedSection.vendorTotalUSD = vendor_total_usd.toFixed(2);
             }
           }
           // If user edits vendorTotalUSD, set flag so it doesn't get overwritten by calculation

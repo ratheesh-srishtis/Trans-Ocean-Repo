@@ -177,7 +177,7 @@ const InvoicePdf = ({
     quantity: totalValues?.quantity,
     customerOMR: totalValues?.customerOMR.toFixed(3),
     customerVAT: totalValues?.customerVAT.toFixed(3),
-    customerTotalUSD: totalValues?.customerTotalUSD.toFixed(3),
+    customerTotalUSD: totalValues?.customerTotalUSD.toFixed(2),
   };
 
   // const [fetchedCharges, setFetchedCharges] = useState(new Set());
@@ -279,7 +279,7 @@ const InvoicePdf = ({
     quantity: vendorTotalValues?.quantity,
     vendorOMR: vendorTotalValues?.vendorOMR.toFixed(3),
     vendorVAT: vendorTotalValues?.vendorVAT.toFixed(3),
-    vendorTotalUSD: vendorTotalValues?.vendorTotalUSD.toFixed(3),
+    vendorTotalUSD: vendorTotalValues?.vendorTotalUSD.toFixed(2),
   };
 
   return (
@@ -431,7 +431,7 @@ const InvoicePdf = ({
                         ).toFixed(3)}
                       </td>
                       <td className="stileone">
-                        {charge.customerTotalUSD.toFixed(3)}
+                        {charge.customerTotalUSD.toFixed(2)}
                       </td>
                     </tr>
                     {charge?.remark && (

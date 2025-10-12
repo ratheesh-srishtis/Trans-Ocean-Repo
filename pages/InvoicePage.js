@@ -383,7 +383,7 @@ const InvoicePage = ({
                       ).toFixed(3)}
                     </td>
                     <td className="tdstylinvoice">
-                      {charge.customerTotalUSD.toFixed(3)}
+                      {charge.customerTotalUSD.toFixed(2)}
                     </td>
 
                     {charge?.documents?.length > 0 && (

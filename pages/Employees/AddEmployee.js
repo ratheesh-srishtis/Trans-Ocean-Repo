@@ -6,6 +6,7 @@ import {
   editEmployee,
   getAllDesignations,
   getAllEmployees,
+  deleteCertificationDocument,
 } from "../../services/apiEmployee";
 import "../../css/payment.css";
 import Swal from "sweetalert2";
@@ -364,6 +365,29 @@ const AddEmployee = () => {
             break;
 
           case "certificatesRecord":
+            // Delete from database if in edit mode and has _id
+            if (isEditing && passed_id && location.state?.employeeId) {
+              try {
+                const deletePayload = {
+                  employeeId: location.state.employeeId,
+                  documentId: passed_id,
+                };
+                await deleteCertificationDocument(deletePayload);
+                console.log("Certificate deleted from database successfully");
+              } catch (error) {
+                console.error(
+                  "Error deleting certificate from database:",
+                  error
+                );
+                Swal.fire(
+                  "Error",
+                  "Failed to delete certificate from database",
+                  "error"
+                );
+                return; // Exit if database deletion fails
+              }
+            }
+
             // Update uploaded medical files
             setUploadedCertificateFiles((prevFiles) => {
               //console.log('Before delete:', prevFiles);

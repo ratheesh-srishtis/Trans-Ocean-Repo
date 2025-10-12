@@ -2,7 +2,7 @@ import axios from "axios";
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 const fileUrl = process.env.REACT_APP_FILE_URL;
- 
+
 // Create an instance of axios with default settings
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -53,12 +53,25 @@ export const deleteEmployee = async (empData) => {
     console.log("Error in delte employee", error);
   }
 };
+// Delete employee
+
+export const deleteCertificationDocument = async (empData) => {
+  try {
+    const response = await axiosInstance.post(
+      "/deleteCertificationDocument",
+      empData
+    );
+    return response.data;
+  } catch (error) {
+    console.log("Error in delte deleteCertificationDocument", error);
+  }
+};
 
 // edit employee
 
 export const editEmployee = async (empData) => {
   try {
-    const response = await axiosInstance.post("/editEmployee",empData);
+    const response = await axiosInstance.post("/editEmployee", empData);
     return response.data;
   } catch (error) {
     console.log("Error in employee edit", error);

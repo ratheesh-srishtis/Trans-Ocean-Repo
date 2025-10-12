@@ -271,43 +271,95 @@ const BerthReport = ({
   };
 
   const isFormValid = () => {
+    console.log("=== VALIDATION DEBUG START ===");
+
     // Check if any field in formState has a value
+    console.log("formState:", formState);
+    const formStateValues = Object.values(formState);
+    console.log("formState values:", formStateValues);
 
-    const isFormStateValid = Object.values(formState).some(
-      (value) => value && String(value).trim() !== ""
-    );
+    const isFormStateValid = formStateValues.some((value) => {
+      const isValid = value != null && String(value).trim() !== "";
+      console.log(`formState value: "${value}" -> valid: ${isValid}`);
+      return isValid;
+    });
+    console.log("isFormStateValid final result:", isFormStateValid);
 
-    console.log(formState, "formState isFormValid");
-    console.log(isFormStateValid, "isFormStateValid isFormValid");
+    // Check if any field in reportRows has a value (excluding description field)
+    console.log("reportRows:", reportRows);
+    const isFormDataValid = reportRows.some((row, rowIndex) => {
+      console.log(`Checking row ${rowIndex}:`, row);
 
-    // Check if any field in formData has a value
-    const isFormDataValid = Object.values(reportRows).some(
-      (value) => value && String(value).trim() !== ""
-    );
+      // Only check reportDate, hours, and minutes (exclude description)
+      const fieldsToCheck = {
+        reportDate: row.reportDate,
+        hours: row.hours,
+        minutes: row.minutes,
+      };
+      console.log(`Row ${rowIndex} fields to check:`, fieldsToCheck);
 
-    console.log(reportRows, "reportRows isFormValid");
-    console.log(isFormDataValid, "isFormDataValid isFormValid");
+      const hasValidValue = Object.entries(fieldsToCheck).some(
+        ([fieldName, value]) => {
+          const isValid = value != null && String(value).trim() !== "";
+          console.log(
+            `  Row ${rowIndex} ${fieldName}: "${value}" -> valid: ${isValid}`
+          );
+          return isValid;
+        }
+      );
+      console.log(`Row ${rowIndex} has valid value:`, hasValidValue);
+      return hasValidValue;
+    });
+    console.log("isFormDataValid final result:", isFormDataValid);
 
     // Check if any remarks are non-empty
-    const areRemarksValid =
-      String(generalRemarks).trim() !== "" ||
-      String(shipperRemarks).trim() !== "" ||
-      String(masterRemarks).trim() !== "";
+    console.log("generalRemarks:", `"${generalRemarks}"`);
+    console.log("shipperRemarks:", `"${shipperRemarks}"`);
+    console.log("masterRemarks:", `"${masterRemarks}"`);
 
-    console.log(areRemarksValid, "areRemarksValid isFormValid");
+    const generalValid =
+      generalRemarks != null && String(generalRemarks).trim() !== "";
+    const shipperValid =
+      shipperRemarks != null && String(shipperRemarks).trim() !== "";
+    const masterValid =
+      masterRemarks != null && String(masterRemarks).trim() !== "";
 
-    // Return true if at least one of these is valid
-    return isFormStateValid || isFormDataValid || areRemarksValid;
+    console.log("generalRemarks valid:", generalValid);
+    console.log("shipperRemarks valid:", shipperValid);
+    console.log("masterRemarks valid:", masterValid);
+
+    const areRemarksValid = generalValid || shipperValid || masterValid;
+    console.log("areRemarksValid final result:", areRemarksValid);
+
+    // Final validation result
+    const finalResult = isFormStateValid || isFormDataValid || areRemarksValid;
+    console.log("=== FINAL VALIDATION RESULT ===");
+    console.log("isFormStateValid:", isFormStateValid);
+    console.log("isFormDataValid:", isFormDataValid);
+    console.log("areRemarksValid:", areRemarksValid);
+    console.log("finalResult (form is valid):", finalResult);
+    console.log("=== VALIDATION DEBUG END ===");
+
+    return finalResult;
   };
 
   const saveTemplate = async (status) => {
-    // Convert all date fields in formData to the desired format
+    console.log("=== SAVE TEMPLATE CALLED ===");
+    console.log("Status:", status);
 
-    if (!isFormValid()) {
+    // Convert all date fields in formData to the desired format
+    const validationResult = isFormValid();
+    console.log("Validation result:", validationResult);
+    console.log("Should show warning (validation failed):", !validationResult);
+
+    if (!validationResult) {
+      console.log("VALIDATION FAILED - Showing warning message");
       setMessage("At least one field must be filled.");
       setOpenPopUp(true);
       return;
     }
+
+    console.log("VALIDATION PASSED - Proceeding with save");
 
     const formattedFormData = Object.keys(reportRows).reduce((acc, key) => {
       acc[key] = reportRows[key]
@@ -787,7 +839,7 @@ const BerthReport = ({
                       <div className="d-flex">
                         <input
                           type="text"
-                          className="form-control vessel-voyage voyageblock timeslotnewloadingeta"
+                          className="form-control vessel-voyage  timeslotnewloadingeta"
                           id="exampleFormControlInput1"
                           placeholder="00"
                           value={etaHours}
@@ -795,7 +847,7 @@ const BerthReport = ({
                         />
                         <input
                           type="text"
-                          className="form-control vessel-voyage voyageblock timeslotnew"
+                          className="form-control vessel-voyage  timeslotnew"
                           id="exampleFormControlInput1"
                           value={etaMinutes}
                           onChange={handleEtaMinuteChange}

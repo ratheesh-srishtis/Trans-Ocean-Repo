@@ -516,6 +516,7 @@ const AddJobs = ({
       setUploadedFiles(updatedFiles);
     }
   };
+
   const editCharges = async () => {
     // Individual checks for each field
     if (selectedService == null || selectedService === "") {
@@ -554,7 +555,27 @@ const AddJobs = ({
         status: Number(selectedStatus),
         documents: uploadedFiles,
         templates: templatesList,
-        ...filteredVendorIds, // Only non-empty vendorId fields
+        // Vendor fields from charge object
+        vendorOMR: charge?.vendorOMR,
+        vendorVAT: charge?.vendorVAT,
+        vendorTotalUSD: charge?.vendorTotalUSD,
+        isPrivateVendor: charge?.isPrivateVendor,
+        vendor2OMR: charge?.vendor2OMR,
+        vendor2VAT: charge?.vendor2VAT,
+        vendor2TotalUSD: charge?.vendor2TotalUSD,
+        isPrivateVendor2: charge?.isPrivateVendor2,
+        vendor3OMR: charge?.vendor3OMR,
+        vendor3VAT: charge?.vendor3VAT,
+        vendor3TotalUSD: charge?.vendor3TotalUSD,
+        isPrivateVendor3: charge?.isPrivateVendor3,
+        vendor4OMR: charge?.vendor4OMR,
+        vendor4VAT: charge?.vendor4VAT,
+        vendor4TotalUSD: charge?.vendor4TotalUSD,
+        isPrivateVendor4: charge?.isPrivateVendor4,
+        vendorId: charge?.vendorId,
+        vendor2Id: charge?.vendor2Id,
+        vendor3Id: charge?.vendor3Id,
+        vendor4Id: charge?.vendor4Id,
       };
       console.log(chargesPayload, "edit_charges_payload_checkingMultiSelect");
       setIsLoading(true);

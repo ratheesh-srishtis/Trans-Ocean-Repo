@@ -95,10 +95,10 @@ const Soa = ({ aedConversionRate }) => {
         (item.discountAmount || 0);
 
       let balanceusd;
-      balanceusd = (balance * 2.62).toFixed(3);
+      balanceusd = (balance * 2.62).toFixed(2);
 
       let balanceAed;
-      balanceAed = (balanceusd * 3.6725).toFixed(3);
+      balanceAed = (balanceusd * 3.6725).toFixed(2);
       const baseRow = {
         "Quotation Number": item.pdaNumber || "N/A",
         "Invoice NO": item.invoiceId || "N/A",
@@ -153,7 +153,7 @@ const Soa = ({ aedConversionRate }) => {
             2.62,
         0
       )
-      .toFixed(3);
+      .toFixed(2);
     const balanceAED = soaList
       .reduce(
         (sum, item) =>
@@ -168,7 +168,7 @@ const Soa = ({ aedConversionRate }) => {
       .toFixed(3);
     const totalUSD = soaList
       .reduce((sum, item) => sum + (item.totalAmountOMR || 0) * 2.62, 0)
-      .toFixed(3);
+      .toFixed(2);
 
     // Add totals row
     const totalsRow = {
@@ -671,8 +671,8 @@ const Soa = ({ aedConversionRate }) => {
               // const balanceAed = (balanceusd * 3.6725).toFixed(4);
 
               let balanceUsdNew;
-              balanceUsdNew = (balance * 2.62).toFixed(3);
-              const balanceAed = (balanceUsdNew * 3.6725).toFixed(3);
+              balanceUsdNew = (balance * 2.62).toFixed(2);
+              const balanceAed = (balanceUsdNew * 3.6725).toFixed(2);
 
               return {
                 id: item._id,
@@ -733,7 +733,7 @@ const Soa = ({ aedConversionRate }) => {
                   .toFixed(3),
                 totalUSD: soaList
                   .reduce((sum, item) => sum + item.totalAmountOMR * 2.62, 0)
-                  .toFixed(3),
+                  .toFixed(2),
                 balanceUSD: soaList
                   .reduce(
                     (sum, item) =>
@@ -744,7 +744,7 @@ const Soa = ({ aedConversionRate }) => {
                         2.62,
                     0
                   )
-                  .toFixed(3),
+                  .toFixed(2),
 
                 balanceAED: soaList
                   .reduce(
@@ -757,7 +757,7 @@ const Soa = ({ aedConversionRate }) => {
                         3.6725,
                     0
                   )
-                  .toFixed(3),
+                  .toFixed(2),
                 days: "",
               },
             ])}

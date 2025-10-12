@@ -70,7 +70,7 @@ const ViewOpsChargesTable = ({
     quantity: totalValues?.quantity,
     customerOMR: totalValues?.customerOMR.toFixed(3),
     customerVAT: totalValues?.customerVAT.toFixed(3),
-    customerTotalUSD: totalValues?.customerTotalUSD.toFixed(3),
+    customerTotalUSD: totalValues?.customerTotalUSD.toFixed(2),
   };
   const vendorTotalValues = chargesArray?.reduce(
     (totals, charge) => {
@@ -88,7 +88,7 @@ const ViewOpsChargesTable = ({
     quantity: vendorTotalValues?.quantity,
     vendorOMR: vendorTotalValues?.vendorOMR.toFixed(3),
     vendorVAT: vendorTotalValues?.vendorVAT.toFixed(3),
-    vendorTotalUSD: vendorTotalValues?.vendorTotalUSD.toFixed(3),
+    vendorTotalUSD: vendorTotalValues?.vendorTotalUSD.toFixed(2),
   };
 
   // Function to handle edit action
@@ -373,7 +373,7 @@ const ViewOpsChargesTable = ({
                                     parseFloat(charge.customerVAT)
                                   ).toFixed(3)}
                                 </td>
-                                <td>{charge.customerTotalUSD.toFixed(3)}</td>
+                                <td>{charge.customerTotalUSD.toFixed(2)}</td>
 
                                 {isAction == true && (
                                   <>
@@ -961,7 +961,7 @@ const ViewOpsChargesTable = ({
                                   if (!isNaN(val) && val !== 0) totalUSD += val;
                                 });
                               });
-                              return totalUSD.toFixed(3);
+                              return totalUSD.toFixed(2);
                             })()}
                           </td>
                           {isAction == true && (

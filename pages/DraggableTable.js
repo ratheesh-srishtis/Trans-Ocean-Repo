@@ -108,7 +108,7 @@ const DraggableTable = ({}) => {
                               parseFloat(user.customerVAT)
                             ).toFixed(3)}
                           </td>
-                          <td>{user.customerTotalUSD.toFixed(3)}</td>
+                          <td>{user.customerTotalUSD.toFixed(2)}</td>
                           <td>
                             <i className="bi bi-pencil-square editicon"> </i>
                             <i className="bi bi-trash deleteicon"></i>
