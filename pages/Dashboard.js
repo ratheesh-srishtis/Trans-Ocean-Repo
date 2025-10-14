@@ -54,6 +54,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     setUserType(loginResponse?.data?.userRole?.roleType);
+    console.log(loginResponse, "loginResponse_superadmin");
   }, [loginResponse]);
 
   useEffect(() => {
@@ -62,7 +63,9 @@ const Dashboard = () => {
 
   return (
     <>
-      {(userType === "finance" || userType === "admin") && (
+      {(userType === "finance" ||
+        userType === "admin" ||
+        userType === "superadmin") && (
         <div>
           <div className="card-main">
             <div className="d-flex flex-column-reverse flex-md-row justify-content-between align-items-md-center mb-3">

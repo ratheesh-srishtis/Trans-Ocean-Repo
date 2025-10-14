@@ -503,8 +503,8 @@
 }
 
 .dept-logo {
-  width: 50px;
-  height: 50px;
+  width: 62px;
+  height: 62px;
   border-radius: 50%;
   padding: 12px;
 }
@@ -569,11 +569,4 @@
 }
 .chatcomma {
   margin-left: -2px;
-}
-
-.dept-logo {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  padding: 12px;
 }

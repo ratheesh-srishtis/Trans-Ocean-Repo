@@ -140,7 +140,8 @@ const Content = ({ onNotFound }) => {
 
   // Fetch AED conversion rate on every route change (separate section)
   useEffect(() => {
-    fetchAedRate();
+    console.log(location.pathname, "location.pathname");
+    // fetchAedRate();
   }, [location.pathname]);
 
   useEffect(() => {

@@ -66,6 +66,58 @@ export const deleteCertificationDocument = async (empData) => {
     console.log("Error in delte deleteCertificationDocument", error);
   }
 };
+export const deleteMedicalRecordDocument = async (empData) => {
+  try {
+    const response = await axiosInstance.post(
+      "/deleteMedicalRecordDocument",
+      empData
+    );
+    return response.data;
+  } catch (error) {
+    console.log("Error in delte deleteMedicalRecordDocument", error);
+  }
+};
+export const deleteLicenseDocument = async (empData) => {
+  try {
+    const response = await axiosInstance.post(
+      "/deleteLicenseDocument",
+      empData
+    );
+    return response.data;
+  } catch (error) {
+    console.log("Error in delte deleteLicenseDocument", error);
+  }
+};
+export const deleteVisaDocument = async (empData) => {
+  try {
+    const response = await axiosInstance.post("/deleteVisaDocument", empData);
+    return response.data;
+  } catch (error) {
+    console.log("Error in delte deleteVisaDocument", error);
+  }
+};
+export const deleteContractDocument = async (empData) => {
+  try {
+    const response = await axiosInstance.post(
+      "/deleteContractDocument",
+      empData
+    );
+    return response.data;
+  } catch (error) {
+    console.log("Error in delte deleteContractDocument", error);
+  }
+};
+export const deletePassportDocument = async (empData) => {
+  try {
+    const response = await axiosInstance.post(
+      "/deletePassportDocument",
+      empData
+    );
+    return response.data;
+  } catch (error) {
+    console.log("Error in delte deletePassportDocument", error);
+  }
+};
 
 // edit employee
 

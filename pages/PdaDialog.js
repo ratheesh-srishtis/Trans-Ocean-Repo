@@ -575,7 +575,9 @@ const PdaDialog = ({
               <br /> {companyBankDetails?.bankName}
               <br /> {companyBankDetails?.bankAddress}
               <br /> A/C NUMBER:- {companyBankDetails?.accountNumberOMR} (OMR)
+              <br /> IBAN:- {companyBankDetails?.ibanOMR} (OMR)
               <br /> A/C NUMBER:-{companyBankDetails?.accountNumberUSD} (USD)
+              <br /> IBAN:- {companyBankDetails?.ibanUSD} (USD)
               <br /> SWIFT CODE: - {companyBankDetails?.swiftCode}
             </div>
           </div>

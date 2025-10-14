@@ -44,7 +44,6 @@ const ResponsiveDialog = ({
   finalChargesArray,
   fullPdaResponse,
   vendors,
-  aedConversionRate,
 }) => {
   console.log(services, "services");
   console.log(pdaResponse, "pdaResponse_responsiveDialog");

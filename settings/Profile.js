@@ -10,10 +10,13 @@ import {
   Card,
   CardContent,
 } from "@mui/material";
+import { Download } from "@mui/icons-material";
 import {
   getProfileDetails,
   editEmployeeProfile,
 } from "../services/apiSettings";
+import { useNavigate } from "react-router-dom";
+
 import PopUp from "../pages/PopUp";
 import Loader from "../pages/Loader";
 import { useAuth } from "../context/AuthContext";
@@ -23,10 +26,14 @@ import {
 } from "../services/apiEmployee";
 import ViewProfile from "./ViewProfile";
 import EditProfile from "./EditProfile";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+import AddEmployee from "../pages/Employees/AddEmployee";
 const Profile = () => {
   const { loginResponse } = useAuth();
   console.log(loginResponse, "loginResponse_profile");
 
+  const [employeeObject, setEmployeeObject] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [openPopUp, setOpenPopUp] = useState(false);
   const [message, setMessage] = useState("");
@@ -69,20 +76,18 @@ const Profile = () => {
     setFormData({ ...formData, medicalRecordDetails: updated });
   };
 
-  useEffect(() => {
-    setEmployeeId(loginResponse?.data?._id);
-  }, [loginResponse]);
-
   const fetchProfileDetails = async () => {
     let payload = {
       userId: "",
       employeeId: loginResponse?.data?._id,
     };
+
     try {
       setIsLoading(true);
       const response = await getProfileDetails(payload);
       console.log("fetchProfileDetails:", response);
       setEmployeeData(response?.employeeDetails[0]);
+      setEmployeeId(response?.employeeDetails[0]?.employeeId);
       setIsLoading(false);
     } catch (error) {
       console.error("Failed to fetch customers", error);
@@ -92,7 +97,7 @@ const Profile = () => {
 
   useEffect(() => {
     fetchProfileDetails();
-  }, []);
+  }, [loginResponse?.data?._id]);
   // State for all editable fields
   const [formData, setFormData] = useState({
     passportDetails: [],
@@ -223,8 +228,45 @@ const Profile = () => {
       fetchProfileDetails();
     }
   };
+  const navigate = useNavigate();
 
-  const handleToggle = () => setIsEditMode((prev) => !prev);
+  const handleToggle = () => {
+    let empdata = employeeData;
+    setIsEditMode((prev) => !prev);
+    let empObj = {
+      employeeId: loginResponse?.data?._id,
+      employeeName: empdata.employeeName,
+      username: empdata.username,
+      password: empdata.password,
+      employeeLastName: empdata.employeeLastName,
+      dob: empdata.dob,
+      address: empdata.address,
+      nationality: empdata.nationality,
+      city: empdata.city,
+      state: empdata.state,
+      postcode: empdata.postcode,
+      contactNumber: empdata.contactNumber,
+      email: empdata.email,
+      passportNumber: empdata.passportNumber,
+      iqamaNumber: empdata.iqamaNumber,
+      dateOfJoining: empdata.dateOfJoining,
+      profession: empdata.profession,
+      designation: empdata.designation,
+      department: empdata.department,
+      officialEmail: empdata.officialEmail,
+      passportDetails: empdata.passportDetails,
+      contractDetails: empdata.contractDetails,
+      visaDetails: empdata.visaDetails,
+      licenseDetails: empdata.licenseDetails,
+      certificationDetails: empdata.certificationDetails,
+      medicalRecordDetails: empdata.medicalRecordDetails,
+      reportingTo: empdata.reportingTo,
+      reportingHead: empdata.reportingHead,
+      isEditing: true,
+    };
+    setEmployeeObject(empObj);
+  };
+
   const BASE_URL = `${process.env.REACT_APP_ASSET_URL}`;
 
   const handleView = (url) => {
@@ -232,36 +274,248 @@ const Profile = () => {
     window.open(`${BASE_URL}${url}`, "_blank");
   };
 
+  // Excel export function - moved from ViewProfile component
+  const handleExportToExcel = () => {
+    try {
+      // Create workbook
+      const workbook = XLSX.utils.book_new();
+
+      // Personal Information Sheet
+      const personalData = [
+        ["Personal Information", ""],
+        ["First Name", formData.employeeName || ""],
+        ["Last Name", formData.employeeLastName || ""],
+        ["Date of Birth", formData.dob || ""],
+        ["Address", formData.address || ""],
+        ["City", formData.city || ""],
+        ["State", formData.state || ""],
+        ["Post Code", formData.postcode || ""],
+        ["Nationality", formData.nationality || ""],
+        ["Contact Number", formData.contactNumber || ""],
+        ["Email ID", formData.email || ""],
+        ["Passport Number", formData.passportNumber || ""],
+        ["Civil ID", formData.iqamaNumber || ""],
+        ["", ""],
+        ["Official Information", ""],
+        ["Date of Joining", formData.dateOfJoining || ""],
+        [
+          "Designation",
+          desiginationlist.find((d) => d._id === formData.designation)
+            ?.designationName || "",
+        ],
+        ["Official Email ID", formData.officialEmail || ""],
+        ["Profession Title", formData.profession || ""],
+      ];
+
+      // Add passport details
+      if (formData.passportDetails?.length > 0) {
+        personalData.push(["", ""]);
+        personalData.push(["Passport Details", ""]);
+        formData.passportDetails.forEach((item, idx) => {
+          personalData.push([
+            `Passport ${idx + 1} - Number`,
+            item.passportNumber || "",
+          ]);
+          personalData.push([
+            `Passport ${idx + 1} - Expiry Date`,
+            item.dateOfExpiry || "",
+          ]);
+          personalData.push([
+            `Passport ${idx + 1} - Document`,
+            item.document?.originalName || "No document",
+          ]);
+        });
+      }
+
+      // Add contract details
+      if (formData.contractDetails?.length > 0) {
+        personalData.push(["", ""]);
+        personalData.push(["Contract Details", ""]);
+        formData.contractDetails.forEach((item, idx) => {
+          personalData.push([
+            `Contract ${idx + 1} - Name`,
+            item.contractName || "",
+          ]);
+          personalData.push([
+            `Contract ${idx + 1} - Start Date`,
+            item.contractStartDate || "",
+          ]);
+          personalData.push([
+            `Contract ${idx + 1} - End Date`,
+            item.contractEndDate || "",
+          ]);
+          personalData.push([
+            `Contract ${idx + 1} - Document`,
+            item.document?.originalName || "No document",
+          ]);
+        });
+      }
+
+      // Add visa details
+      if (formData.visaDetails?.length > 0) {
+        personalData.push(["", ""]);
+        personalData.push(["Visa Details", ""]);
+        formData.visaDetails.forEach((item, idx) => {
+          personalData.push([
+            `Visa ${idx + 1} - Number`,
+            item.visaNumber || "",
+          ]);
+          personalData.push([
+            `Visa ${idx + 1} - Expiry Date`,
+            item.dateOfExpiry || "",
+          ]);
+          personalData.push([
+            `Visa ${idx + 1} - Document`,
+            item.document?.originalName || "No document",
+          ]);
+        });
+      }
+
+      // Add license details
+      if (formData.licenseDetails?.length > 0) {
+        personalData.push(["", ""]);
+        personalData.push(["License Details", ""]);
+        formData.licenseDetails.forEach((item, idx) => {
+          personalData.push([
+            `License ${idx + 1} - Number`,
+            item.licenseNumber || "",
+          ]);
+          personalData.push([
+            `License ${idx + 1} - Expiry Date`,
+            item.dateOfExpiry || "",
+          ]);
+          personalData.push([
+            `License ${idx + 1} - Document`,
+            item.document?.originalName || "No document",
+          ]);
+        });
+      }
+
+      // Add certification details
+      if (formData.certificationDetails?.length > 0) {
+        personalData.push(["", ""]);
+        personalData.push(["Certification Details", ""]);
+        formData.certificationDetails.forEach((item, idx) => {
+          personalData.push([
+            `Certification ${idx + 1} - Name`,
+            item.certification || "",
+          ]);
+          personalData.push([
+            `Certification ${idx + 1} - Description`,
+            item.certificateDescription || "",
+          ]);
+          personalData.push([
+            `Certification ${idx + 1} - Document`,
+            item.document?.originalName || "No document",
+          ]);
+        });
+      }
+
+      // Add medical record details
+      if (formData.medicalRecordDetails?.length > 0) {
+        personalData.push(["", ""]);
+        personalData.push(["Medical Record Details", ""]);
+        formData.medicalRecordDetails.forEach((item, idx) => {
+          personalData.push([
+            `Medical Record ${idx + 1} - Description`,
+            item.description || "",
+          ]);
+          personalData.push([
+            `Medical Record ${idx + 1} - Relationship`,
+            item.relationship || "",
+          ]);
+          personalData.push([
+            `Medical Record ${idx + 1} - Document`,
+            item.document?.originalName || "No document",
+          ]);
+        });
+      }
+
+      const worksheet = XLSX.utils.aoa_to_sheet(personalData);
+
+      // Set column widths
+      worksheet["!cols"] = [
+        { wch: 30 }, // Field name column
+        { wch: 40 }, // Value column
+      ];
+
+      // Add worksheet to workbook
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Profile");
+
+      // Generate filename
+      const employeeName = formData.employeeName || "Employee";
+      const timestamp = new Date().toISOString().split("T")[0];
+      const fileName = `${employeeName}_Profile_${timestamp}.xlsx`;
+
+      // Convert to buffer and save
+      const excelBuffer = XLSX.write(workbook, {
+        bookType: "xlsx",
+        type: "array",
+      });
+      const blob = new Blob([excelBuffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      saveAs(blob, fileName);
+
+      console.log(`Excel file exported successfully: ${fileName}`);
+    } catch (error) {
+      console.error("Error exporting to Excel:", error);
+      alert("Error exporting to Excel. Please try again.");
+    }
+  };
+
+  // Common button styles
+  const buttonStyles = {
+    backgroundColor: "#1ebbee",
+    height: "36px",
+    color: "white",
+    fontSize: "13px",
+    textTransform: "none",
+    "&:hover": {
+      backgroundColor: "#169bb8",
+    },
+    minWidth: "auto",
+    px: 2,
+  };
+
   return (
     <Container maxWidth="lg">
-      <Box sx={{ py: 4 }}>
-        <Paper elevation={3} sx={{ borderRadius: 2 }}>
+      <Box sx={{ py: 0 }}>
+        <Paper elevation={0} sx={{ borderRadius: 2 }}>
           <Card>
             <CardContent sx={{ p: 4 }}>
-              {/* Header */}
-              <Box sx={{ mb: 4, textAlign: "center" }}>
-                <Typography
-                  variant="h4"
-                  component="h1"
-                  gutterBottom
-                  sx={{ fontWeight: 600 }}
+              {/* Action Buttons */}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: 2,
+                  mb: 3,
+                }}
+              >
+                <Button
+                  variant="contained"
+                  startIcon={<Download />}
+                  onClick={handleExportToExcel}
+                  sx={buttonStyles}
                 >
-                  My Profile
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  {isEditMode
-                    ? "Edit your profile information"
-                    : "View your profile details"}
-                </Typography>
-              </Box>
-
-              {/* Toggle Button */}
-              <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 3 }}>
+                  Download Excel
+                </Button>
                 <Button
                   variant={isEditMode ? "outlined" : "contained"}
-                  size="large"
                   onClick={handleToggle}
-                  sx={{ px: 4 }}
+                  sx={{
+                    ...buttonStyles,
+                    ...(isEditMode && {
+                      backgroundColor: "transparent",
+                      color: "#1ebbee",
+                      border: "1px solid #1ebbee",
+                      "&:hover": {
+                        backgroundColor: "#1ebbee",
+                        color: "white",
+                      },
+                    }),
+                  }}
                 >
                   {isEditMode ? "Cancel Edit" : "Edit Profile"}
                 </Button>
@@ -276,19 +530,9 @@ const Profile = () => {
                   BASE_URL={BASE_URL}
                 />
               ) : (
-                <EditProfile
-                  formData={formData}
-                  setFormData={setFormData}
-                  desiginationlist={desiginationlist}
-                  handleInputChange={handleInputChange}
-                  handleFileChange={handleFileChange}
-                  handleView={handleView}
-                  handleUpdate={handleUpdate}
-                  handleAddCertificate={handleAddCertificate}
-                  handleAddMedical={handleAddMedical}
-                  handleDeleteCertificate={handleDeleteCertificate}
-                  handleDeleteMedical={handleDeleteMedical}
-                />
+                <>
+                  <EditProfile employeeObject={employeeObject} />
+                </>
               )}
             </CardContent>
           </Card>

@@ -130,6 +130,28 @@ const AddUser = ({
       setSelectedRoleType(selectedRoleObj?.roleType || "");
     }
 
+    // If changing the employee, auto-populate name, email, and phone number
+    if (name === "employeeId" && value) {
+      const selectedEmployee = EmployeeList.find((emp) => emp._id === value);
+      if (selectedEmployee) {
+        setFormData((prevData) => ({
+          ...prevData,
+          [name]: value,
+          name: `${selectedEmployee.employeeName}${selectedEmployee.employeeLastName}`,
+          email: selectedEmployee.officialEmail || selectedEmployee.email || "",
+          phonenumber: selectedEmployee.contactNumber || "",
+        }));
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: "",
+          name: "",
+          email: "",
+          phonenumber: "",
+        }));
+        return;
+      }
+    }
+
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -298,6 +320,10 @@ const AddUser = ({
     // });
   };
 
+  useEffect(() => {
+    console.log(EmployeeList, "EmployeeList");
+  }, [EmployeeList]);
+
   return (
     <>
       <Dialog
@@ -332,7 +358,6 @@ const AddUser = ({
                     {" "}
                     Employee :
                   </label>
-
                   <select
                     className="form-select mmonthpayment"
                     name="employeeId"

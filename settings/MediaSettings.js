@@ -148,7 +148,7 @@ const MediaSettings = () => {
           </div>
         </div>
 
-        <div className="row ">
+        <div className="row secand-section-margin">
           <div className="col-md-4 col-lg-4 col-xl-3  col-12 ">
             <h6 className="subheadmediafont">Finance Logo</h6>
             <div className="media-logo-preview">

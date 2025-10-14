@@ -7,10 +7,16 @@ import {
   getAllDesignations,
   getAllEmployees,
   deleteCertificationDocument,
+  deleteMedicalRecordDocument,
+  deleteLicenseDocument,
+  deleteVisaDocument,
+  deleteContractDocument,
+  deletePassportDocument,
 } from "../../services/apiEmployee";
 import "../../css/payment.css";
 import Swal from "sweetalert2";
 import PopUp from "../PopUp";
+import Loader from "../Loader";
 const AddEmployee = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -18,6 +24,7 @@ const AddEmployee = () => {
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState({});
   const [EmployeeList, setEmployeeList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false); // Loader state
 
   const [passportName, setpassportName] = useState(null);
   const [passportUrl, setpassportUrl] = useState(null);
@@ -336,6 +343,31 @@ const AddEmployee = () => {
         // Check for specific cases
         switch (fieldName) {
           case "passportupload":
+            // Delete from database if in edit mode and employeeId exists
+            if (isEditing && location.state?.employeeId) {
+              try {
+                const deletePayload = {
+                  employeeId: location.state.employeeId,
+                  documentId: location.state.passportDetails[0]._id,
+                };
+                await deletePassportDocument(deletePayload);
+                console.log(
+                  "Passport document deleted from database successfully"
+                );
+              } catch (error) {
+                console.error(
+                  "Error deleting passport document from database:",
+                  error
+                );
+                Swal.fire(
+                  "Error",
+                  "Failed to delete passport document from database",
+                  "error"
+                );
+                return; // Exit if database deletion fails
+              }
+            }
+
             setpassportName("");
             setpassportUrl("");
             if (fileInputRefPassport.current) {
@@ -343,6 +375,31 @@ const AddEmployee = () => {
             }
             break;
           case "contractupload":
+            // Delete from database if in edit mode and employeeId exists
+            if (isEditing && location.state?.employeeId) {
+              try {
+                const deletePayload = {
+                  employeeId: location.state.employeeId,
+                  documentId: location.state.contractDetails[0]._id,
+                };
+                await deleteContractDocument(deletePayload);
+                console.log(
+                  "Contract document deleted from database successfully"
+                );
+              } catch (error) {
+                console.error(
+                  "Error deleting contract document from database:",
+                  error
+                );
+                Swal.fire(
+                  "Error",
+                  "Failed to delete contract document from database",
+                  "error"
+                );
+                return; // Exit if database deletion fails
+              }
+            }
+
             setcontractName("");
             setcontractUrl("");
             if (fileInputRefContract.current) {
@@ -350,6 +407,29 @@ const AddEmployee = () => {
             }
             break;
           case "visaupload":
+            // Delete from database if in edit mode and employeeId exists
+            if (isEditing && location.state?.employeeId) {
+              try {
+                const deletePayload = {
+                  employeeId: location.state.employeeId,
+                  documentId: location.state.visaDetails[0]._id,
+                };
+                await deleteVisaDocument(deletePayload);
+                console.log("Visa document deleted from database successfully");
+              } catch (error) {
+                console.error(
+                  "Error deleting visa document from database:",
+                  error
+                );
+                Swal.fire(
+                  "Error",
+                  "Failed to delete visa document from database",
+                  "error"
+                );
+                return; // Exit if database deletion fails
+              }
+            }
+
             setvisaName("");
             setvisaUrl("");
             if (fileInputRefVisa.current) {
@@ -357,6 +437,31 @@ const AddEmployee = () => {
             }
             break;
           case "licenseupload":
+            // Delete from database if in edit mode and employeeId exists
+            if (isEditing && location.state?.employeeId) {
+              try {
+                const deletePayload = {
+                  employeeId: location.state.employeeId,
+                  documentId: location.state.licenseDetails[0]._id,
+                };
+                await deleteLicenseDocument(deletePayload);
+                console.log(
+                  "License document deleted from database successfully"
+                );
+              } catch (error) {
+                console.error(
+                  "Error deleting license document from database:",
+                  error
+                );
+                Swal.fire(
+                  "Error",
+                  "Failed to delete license document from database",
+                  "error"
+                );
+                return; // Exit if database deletion fails
+              }
+            }
+
             setlicenseName("");
             setlicenseUrl("");
             if (fileInputRefLicence.current) {
@@ -377,6 +482,7 @@ const AddEmployee = () => {
               } catch (error) {
                 console.error(
                   "Error deleting certificate from database:",
+
                   error
                 );
                 Swal.fire(
@@ -423,6 +529,31 @@ const AddEmployee = () => {
             break;
 
           default:
+            // Delete from database if in edit mode and has _id
+            if (isEditing && passed_id && location.state?.employeeId) {
+              try {
+                const deletePayload = {
+                  employeeId: location.state.employeeId,
+                  documentId: passed_id,
+                };
+                await deleteMedicalRecordDocument(deletePayload);
+                console.log(
+                  "Medical record deleted from database successfully"
+                );
+              } catch (error) {
+                console.error(
+                  "Error deleting medical record from database:",
+                  error
+                );
+                Swal.fire(
+                  "Error",
+                  "Failed to delete medical record from database",
+                  "error"
+                );
+                return; // Exit if database deletion fails
+              }
+            }
+
             // Update uploaded medical files
             setUploadedMedicalFiles((prevFiles) => {
               //console.log('Before delete:', prevFiles);
@@ -623,6 +754,9 @@ const AddEmployee = () => {
           reportingTo: "",
           reportingHead: "",
         });
+      } else {
+        setOpenPopUp(true);
+        setMessage(response.message);
       }
     } catch (error) {
       setMessage(error);
@@ -631,184 +765,193 @@ const AddEmployee = () => {
   const handleFileChange = async (event) => {
     const imageData = event.target.files[0];
     if (!imageData) return;
-    const formData = new FormData();
-    formData.append("files", imageData);
-    let response = await uploadDocuments(formData);
-    const updatedFileData = {
-      originalName: response.data[0].originalName,
-      url: response.data[0].url,
-    };
+    setIsLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("files", imageData);
+      let response = await uploadDocuments(formData);
+      const updatedFileData = {
+        originalName: response.data[0].originalName,
+        url: response.data[0].url,
+      };
 
-    setUploadedFiles((prevFiles) => ({
-      ...prevFiles,
-      [event.target.name]: updatedFileData,
-    }));
+      setUploadedFiles((prevFiles) => ({
+        ...prevFiles,
+        [event.target.name]: updatedFileData,
+      }));
 
-    //console.log('Uploaded Files:', updatedFileData);
+      //console.log('Uploaded Files:', updatedFileData);
 
-    setFormData((prevData) => ({
-      ...prevData,
-      [event.target.name]: response.data[0].originalName,
-    }));
-    //console.log('Form Data:', response.data[0].originalName);
+      setFormData((prevData) => ({
+        ...prevData,
+        [event.target.name]: response.data[0].originalName,
+      }));
+      //console.log('Form Data:', response.data[0].originalName);
 
-    if (response.status === true) {
-      switch (event.target.name) {
-        case "passportupload":
-          setpassportName(response.data[0].originalName);
-          setpassportUrl(response.data[0].url);
-          setFormData((prevData) => ({
-            ...prevData,
-            passportupload: response.data[0].originalName,
-          }));
+      if (response.status === true) {
+        switch (event.target.name) {
+          case "passportupload":
+            setpassportName(response.data[0].originalName);
+            setpassportUrl(response.data[0].url);
+            setFormData((prevData) => ({
+              ...prevData,
+              passportupload: response.data[0].originalName,
+            }));
 
-          break;
-        case "contractupload":
-          setcontractName(response.data[0].originalName);
-          setcontractUrl(response.data[0].url);
-          setFormData((prevData) => ({
-            ...prevData,
-            contractupload: response.data[0].originalName,
-          }));
-          break;
-        case "visaupload":
-          setvisaName(response.data[0].originalName);
-          setvisaUrl(response.data[0].url);
-          setFormData((prevData) => ({
-            ...prevData,
-            visaupload: response.data[0].originalName,
-          }));
-          break;
+            break;
+          case "contractupload":
+            setcontractName(response.data[0].originalName);
+            setcontractUrl(response.data[0].url);
+            setFormData((prevData) => ({
+              ...prevData,
+              contractupload: response.data[0].originalName,
+            }));
+            break;
+          case "visaupload":
+            setvisaName(response.data[0].originalName);
+            setvisaUrl(response.data[0].url);
+            setFormData((prevData) => ({
+              ...prevData,
+              visaupload: response.data[0].originalName,
+            }));
+            break;
 
-        case "licenseupload":
-          setlicenseName(response.data[0].originalName);
-          setlicenseUrl(response.data[0].url);
-          setFormData((prevData) => ({
-            ...prevData,
-            licenseupload: response.data[0].originalName,
-          }));
-          break;
-        case "certificatesRecord":
-          const certificateFieldId = event.target.id.split("_")[1]; // Extracting ID from the input ID
-          console.log(certificateFieldId, "certificateFieldId");
-          let certificateUpdatedFields = [];
-          let editUpdatedCertificateFields = [];
-          if (isEditing) {
-            //console.log("OKH::",fields);
-            editUpdatedCertificateFields = certificateFields.map((field) => {
-              //delete field.medical_description;
-              delete field.certificatesRecord;
-              if (field.id) {
-                field._id = field.id;
-                delete field.id;
-              }
-              //console.log("HH",field);
-              if (
-                field._id === parseInt(certificateFieldId) ||
-                field._id === certificateFieldId
-              ) {
-                return {
-                  ...field,
-                  document: {
-                    url: response.data[0].url, // Assuming response data structure
-                    originalName: response.data[0].originalName,
-                  },
-                };
-              }
+          case "licenseupload":
+            setlicenseName(response.data[0].originalName);
+            setlicenseUrl(response.data[0].url);
+            setFormData((prevData) => ({
+              ...prevData,
+              licenseupload: response.data[0].originalName,
+            }));
+            break;
+          case "certificatesRecord":
+            const certificateFieldId = event.target.id.split("_")[1]; // Extracting ID from the input ID
+            console.log(certificateFieldId, "certificateFieldId");
+            let certificateUpdatedFields = [];
+            let editUpdatedCertificateFields = [];
+            if (isEditing) {
+              //console.log("OKH::",fields);
+              editUpdatedCertificateFields = certificateFields.map((field) => {
+                //delete field.medical_description;
+                delete field.certificatesRecord;
+                if (field.id) {
+                  field._id = field.id;
+                  delete field.id;
+                }
+                //console.log("HH",field);
+                if (
+                  field._id === parseInt(certificateFieldId) ||
+                  field._id === certificateFieldId
+                ) {
+                  return {
+                    ...field,
+                    document: {
+                      url: response.data[0].url, // Assuming response data structure
+                      originalName: response.data[0].originalName,
+                    },
+                  };
+                }
 
-              return field;
-            });
-          } else {
-            certificateUpdatedFields = certificateFields.map((field) => {
-              if (field.id === parseInt(certificateFieldId)) {
-                return {
-                  ...field,
-                  certificatesRecord: {
-                    url: response.data[0].url, // Assuming response data structure
-                    originalName: response.data[0].originalName,
-                  },
-                };
-              }
-              return field;
-            });
-          }
-          if (isEditing) {
-            setCertificateFields(editUpdatedCertificateFields);
-            console.log(
-              "editUpdatedCertificateFields:",
-              editUpdatedCertificateFields
-            );
-          } else {
-            setCertificateFields(certificateUpdatedFields);
-            //console.log('Updated Fields:', certificateUpdatedFields);
-          }
+                return field;
+              });
+            } else {
+              certificateUpdatedFields = certificateFields.map((field) => {
+                if (field.id === parseInt(certificateFieldId)) {
+                  return {
+                    ...field,
+                    certificatesRecord: {
+                      url: response.data[0].url, // Assuming response data structure
+                      originalName: response.data[0].originalName,
+                    },
+                  };
+                }
+                return field;
+              });
+            }
+            if (isEditing) {
+              setCertificateFields(editUpdatedCertificateFields);
+              console.log(
+                "editUpdatedCertificateFields:",
+                editUpdatedCertificateFields
+              );
+            } else {
+              setCertificateFields(certificateUpdatedFields);
+              //console.log('Updated Fields:', certificateUpdatedFields);
+            }
 
-          setUploadedCertificateFiles((prevFiles) => ({
-            ...prevFiles,
-            [certificateFieldId]: updatedFileData,
-          }));
-          // console.log('Updated Fields:', isEditing ? editUpdatedCertificateFields : certificateUpdatedFields);
-          //console.log('Uploaded Medical Files:', updatedFileData);
+            setUploadedCertificateFiles((prevFiles) => ({
+              ...prevFiles,
+              [certificateFieldId]: updatedFileData,
+            }));
+            // console.log('Updated Fields:', isEditing ? editUpdatedCertificateFields : certificateUpdatedFields);
+            //console.log('Uploaded Medical Files:', updatedFileData);
 
-          break;
-        default:
-          const fieldId = event.target.id.split("_")[1]; // Extracting ID from the input ID
-          console.log(fieldId, "medical_fieldId");
+            break;
+          default:
+            const fieldId = event.target.id.split("_")[1]; // Extracting ID from the input ID
+            console.log(fieldId, "medical_fieldId");
 
-          let updatedFields = [];
-          let editupdatedFileds = [];
-          if (isEditing) {
-            //console.log("OKH::",fields);
-            editupdatedFileds = fields.map((field) => {
-              //delete field.medical_description;
-              delete field.medicalrord;
-              if (field.id) {
-                field._id = field.id;
-                delete field.id;
-              }
-              //console.log("HH",field);
+            let updatedFields = [];
+            let editupdatedFileds = [];
+            if (isEditing) {
+              //console.log("OKH::",fields);
+              editupdatedFileds = fields.map((field) => {
+                //delete field.medical_description;
+                delete field.medicalrord;
+                if (field.id) {
+                  field._id = field.id;
+                  delete field.id;
+                }
+                //console.log("HH",field);
 
-              if (field._id === parseInt(fieldId) || field._id === fieldId) {
-                return {
-                  ...field,
-                  document: {
-                    url: response.data[0].url, // Assuming response data structure
-                    originalName: response.data[0].originalName,
-                  },
-                };
-              }
-              return field;
-            });
-          } else {
-            updatedFields = fields.map((field) => {
-              if (field.id === parseInt(fieldId)) {
-                return {
-                  ...field,
-                  medicalrord: {
-                    url: response.data[0].url, // Assuming response data structure
-                    originalName: response.data[0].originalName,
-                  },
-                };
-              }
-              return field;
-            });
-          }
-          if (isEditing) {
-            setFields(editupdatedFileds);
-            //console.log('Updated Fields:', editupdatedFileds);
-          } else {
-            setFields(updatedFields);
-            //console.log('Updated Fields:', updatedFields);
-          }
+                if (field._id === parseInt(fieldId) || field._id === fieldId) {
+                  return {
+                    ...field,
+                    document: {
+                      url: response.data[0].url, // Assuming response data structure
+                      originalName: response.data[0].originalName,
+                    },
+                  };
+                }
+                return field;
+              });
+            } else {
+              updatedFields = fields.map((field) => {
+                if (field.id === parseInt(fieldId)) {
+                  return {
+                    ...field,
+                    medicalrord: {
+                      url: response.data[0].url, // Assuming response data structure
+                      originalName: response.data[0].originalName,
+                    },
+                  };
+                }
+                return field;
+              });
+            }
+            if (isEditing) {
+              setFields(editupdatedFileds);
+              //console.log('Updated Fields:', editupdatedFileds);
+            } else {
+              setFields(updatedFields);
+              //console.log('Updated Fields:', updatedFields);
+            }
 
-          setUploadedMedicalFiles((prevFiles) => ({
-            ...prevFiles,
-            [fieldId]: updatedFileData,
-          }));
-          // console.log('Updated Fields:', isEditing ? editupdatedFileds : updatedFields);
-          //console.log('Uploaded Medical Files:', updatedFileData);
-          break;
+            setUploadedMedicalFiles((prevFiles) => ({
+              ...prevFiles,
+              [fieldId]: updatedFileData,
+            }));
+            // console.log('Updated Fields:', isEditing ? editupdatedFileds : updatedFields);
+            //console.log('Uploaded Medical Files:', updatedFileData);
+            break;
+        }
       }
+    } catch (error) {
+      console.error("Error uploading document:", error);
+      setMessage("Failed to upload document. Please try again.");
+      setOpenPopUp(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -1586,6 +1729,9 @@ const AddEmployee = () => {
           {/* certificate */}
           <div className="documentnewstyle shadow p-3 mb-4 bg-body-tertiary rounded">
             <div className="contract">Certificate Details</div>
+            {certificateFields?.length == 0 && (
+              <div className="text-center">No Certificate Records Added</div>
+            )}
             <div>
               {/* Add more certificate reord */}
               {certificateFields.map((field) => (
@@ -1742,6 +1888,9 @@ const AddEmployee = () => {
             <div className="contract">Medical Details</div>
             <div>
               {/* Add more medical reord */}
+              {fields?.length == 0 && (
+                <div className="text-center">No Medical Records Added</div>
+              )}
               {fields.map((field) => (
                 <div
                   key={isEditing ? field._id : field.id}
@@ -1899,6 +2048,7 @@ const AddEmployee = () => {
       </div>
 
       {openPopUp && <PopUp message={message} closePopup={reloadpage} />}
+      <Loader isLoading={isLoading} />
     </>
   );
 };

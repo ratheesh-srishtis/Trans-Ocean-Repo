@@ -40,7 +40,6 @@ const CreatePDA = ({
   customers,
   loginResponse,
   vendors,
-  aedConversionRate,
 }) => {
   const createPdaImage = require("../assets/images/Group 1000002975.png");
   const updatePdaImage = require("../assets/images/updatedpda.png");
@@ -1286,10 +1285,6 @@ const CreatePDA = ({
     handleQuotationClose();
   };
 
-  useEffect(() => {
-    console.log(aedConversionRate, "aedConversionRate_createPDA");
-  }, [aedConversionRate]);
-
   return (
     <>
       <div className="pdacontent">
@@ -2237,7 +2232,6 @@ const CreatePDA = ({
         fullPdaResponse={fullPdaResponse}
         vendors={vendors}
         isInitialEdit={isInitialEdit}
-        aedConversionRate={aedConversionRate}
       />
 
       <QuotationDialog

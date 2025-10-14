@@ -287,12 +287,13 @@
 /* Position the eye icon at top-right of input */
 .password-toggle {
   position: absolute;
-  top: 25px; /* adjust based on input height */
+  top: 31px;
   right: 20px;
   cursor: pointer;
   color: #6c757d;
   font-size: 1.2rem;
   z-index: 2;
+  -webkit-user-select: none;
   user-select: none;
 }
 

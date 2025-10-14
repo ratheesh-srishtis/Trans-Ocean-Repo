@@ -6,14 +6,17 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
   getAllEmployeeLeaves,
+  getAllUserLeaves,
   deleteLeave,
 } from "../../services/apiLeavePortal";
 import "../../css/payment.css";
 import AddLeave from "./AddLeave";
 import Swal from "sweetalert2";
 import PopUp from "../PopUp";
+import Loader from "../Loader";
 const Leave = ({ loginResponse }) => {
   const Group = require("../../assets/images/leave.png");
+  const [isLoading, setIsLoading] = useState(false); // Loader state
 
   const [LeaveList, SetEmpLeaves] = useState([]);
   const [employeeId, setEmployeeId] = useState("");
@@ -33,21 +36,28 @@ const Leave = ({ loginResponse }) => {
   useEffect(() => {
     console.log("loginResponse", loginResponse);
     if (loginResponse?.isEmployee === true) {
-      setEmployeeId(loginResponse?.data?._id);
+      fecthEmployeeLeaves({ employeeId: loginResponse?.data?._id });
     } else {
-      setEmployeeId(null);
+      fecthUserLeaves({ userId: loginResponse?.data?._id });
     }
   }, [loginResponse]);
-
-  useEffect(() => {
-    console.log("employeeId", employeeId);
-    const payload = { employeeId: employeeId };
-    fecthEmployeeLeaves(payload);
-  }, [employeeId]);
 
   const fecthEmployeeLeaves = async (paylaod) => {
     console.log("payload", paylaod);
     const listLeaves = await getAllEmployeeLeaves(paylaod);
+    SetEmpLeaves(listLeaves?.leaves || []);
+
+    // Update leave counts
+    setLeaveCounts({
+      remainingAnnualLeave: listLeaves?.remainingAnnualLeave || 0,
+      remainingCasuallLeave: listLeaves?.remainingCasuallLeave || 0,
+      remainingSicklLeave: listLeaves?.remainingSicklLeave || 0,
+      remainingEmergencyLeave: listLeaves?.remainingEmergencyLeave || 0,
+    });
+  };
+  const fecthUserLeaves = async (paylaod) => {
+    console.log("payload", paylaod);
+    const listLeaves = await getAllUserLeaves(paylaod);
     SetEmpLeaves(listLeaves?.leaves || []);
 
     // Update leave counts
@@ -151,6 +161,12 @@ const Leave = ({ loginResponse }) => {
     setOpen(false);
     setEditMode(false);
     setErrors({});
+    const payload = { employeeId: employeeId };
+    if (loginResponse?.isEmployee === true) {
+      fecthEmployeeLeaves({ employeeId: loginResponse?.data?._id });
+    } else {
+      fecthUserLeaves({ userId: loginResponse?.data?._id });
+    }
   };
   return (
     <>
@@ -320,7 +336,7 @@ const Leave = ({ loginResponse }) => {
           open={open}
           onClose={handleClose}
           listLeaves={handleListLeaves}
-          employeeId={employeeId}
+          employeeId={loginResponse?.data?._id}
           editMode={editMode}
           leavevalues={selectedRow}
           errors={errors}
@@ -330,6 +346,7 @@ const Leave = ({ loginResponse }) => {
       {openPopUp && (
         <PopUp message={message} closePopup={() => setOpenPopUp(false)} />
       )}
+      <Loader isLoading={isLoading} />
     </>
   );
 };

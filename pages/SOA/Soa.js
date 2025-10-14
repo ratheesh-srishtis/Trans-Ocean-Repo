@@ -8,7 +8,7 @@ import { getAllCustomers } from "../../services/apiSettings";
 import { Box, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import "../../css/soa.css";
-const Soa = ({ aedConversionRate }) => {
+const Soa = ({}) => {
   // Importing the Group image
   const Group = require("../../assets/images/soa.png");
   const [customerList, setCustomerList] = useState([]);

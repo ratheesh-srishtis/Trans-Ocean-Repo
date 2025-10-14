@@ -41,10 +41,13 @@ export const AuthProvider = ({ children }) => {
           localStorage.setItem("transocean_token", response.token);
           localStorage.setItem("loginResponse", JSON.stringify(response)); // Save response to localStorage
           const sidemenu = response?.permission || [];
+          console.log(sidemenu, "sidemenu");
           setMessage("Logged in successfully!");
           setOpenPopUp(true);
           setIsAuthenticated(true);
-          navigate("/" + sidemenu[0]);
+          // Convert menu item to URL-friendly format (lowercase with hyphens)
+          const firstMenuItem = sidemenu[0]?.toLowerCase().replace(/\s+/g, "-");
+          navigate("/" + firstMenuItem);
         } else {
           setMessage("Login failed. Please try again");
           setOpenPopUp(true);
