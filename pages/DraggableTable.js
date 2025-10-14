@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { getPdaInformations, changeServiceOrder } from "../services/apiService";
-import brandConfig from "../config/brandConfig";
 const DraggableTable = ({}) => {
   const [users, setUsers] = useState([]);
 
@@ -72,13 +71,9 @@ const DraggableTable = ({}) => {
                 <th className="tableheadcolor">Service Type</th>
                 <th className="tableheadcolor">Charge Type</th>
                 <th className="tableheadcolor">Sub Charge Type</th>
-                <th className="tableheadcolor">
-                  Amount ({brandConfig?.currencyName})
-                </th>
+                <th className="tableheadcolor">Amount (OMR)</th>
                 <th className="tableheadcolor">VAT Amount</th>
-                <th className="tableheadcolor">
-                  Total {brandConfig?.currencyName}
-                </th>
+                <th className="tableheadcolor">Total OMR</th>
                 <th className="tableheadcolor">Total USD</th>
                 <th className="tableheadcolor">Actions</th>{" "}
               </tr>
@@ -105,29 +100,15 @@ const DraggableTable = ({}) => {
                           <td>{user?.serviceId?.serviceName}</td>
                           <td>{user.chargeId?.chargeName}</td>
                           <td>{user.subchargeId?.subchargeName}</td>
-                          <td>
-                            {user.customerOMR.toFixed(
-                              brandConfig?.currencyName === "OMR" ? 3 : 2
-                            )}
-                          </td>
-                          <td>
-                            {user.customerVAT.toFixed(
-                              brandConfig?.currencyName === "OMR" ? 3 : 2
-                            )}
-                          </td>
+                          <td>{user.customerOMR.toFixed(3)}</td>
+                          <td>{user.customerVAT.toFixed(3)}</td>
                           <td>
                             {(
                               parseFloat(user.customerOMR) +
                               parseFloat(user.customerVAT)
-                            ).toFixed(
-                              brandConfig?.currencyName === "OMR" ? 3 : 2
-                            )}
+                            ).toFixed(3)}
                           </td>
-                          <td>
-                            {user.customerTotalUSD.toFixed(
-                              brandConfig?.currencyName === "OMR" ? 3 : 2
-                            )}
-                          </td>
+                          <td>{user.customerTotalUSD.toFixed(2)}</td>
                           <td>
                             <i className="bi bi-pencil-square editicon"> </i>
                             <i className="bi bi-trash deleteicon"></i>

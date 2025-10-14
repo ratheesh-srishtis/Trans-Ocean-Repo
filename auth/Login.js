@@ -6,7 +6,6 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { forgotUserPassword } from "../services/apiService";
 import PopUp from "../pages/PopUp";
-import brandConfig from "../config/brandConfig";
 const Login = () => {
   const { login } = useAuth();
   const logo = require("../assets/images/LOGO.png");
@@ -275,7 +274,7 @@ const Login = () => {
           </p>
         </div>
         <div className="d-flex justify-content-center loginpageversion">
-          Version: 0.105
+          Version: 0.107
         </div>
       </div>
 

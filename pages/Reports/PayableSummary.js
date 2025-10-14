@@ -14,7 +14,6 @@ import { DataGrid } from "@mui/x-data-grid";
 import "react-datepicker/dist/react-datepicker.css";
 import Swal from "sweetalert2";
 import { Box, Typography } from "@mui/material";
-import brandConfig from "../../config/brandConfig";
 const PayableSummary = () => {
   const Group = require("../../assets/images/reporttttt.png");
 
@@ -226,12 +225,12 @@ const PayableSummary = () => {
 
   const totalPayable = reportList
     ?.reduce((sum, r) => sum + (r.totalInvoiceAmount - r.paidAmount), 0)
-    .toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2);
+    .toFixed(3);
   const rows = [
     ...reportList?.map((report, index) => {
       const vendorName = report?.vendorName ? report?.vendorName : "";
       const amountOMR = (report.totalInvoiceAmount - report.paidAmount).toFixed(
-        brandConfig?.currencyName === "OMR" ? 3 : 2
+        3
       );
       const remark = report ? report.remark : "";
 
@@ -243,7 +242,7 @@ const PayableSummary = () => {
       return {
         id: index,
         vendorName: vendorName ? vendorName : "-",
-        amountOMR: `${brandConfig?.currencyName} ${amountOMR}`,
+        amountOMR: `OMR ${amountOMR}`,
         remark: remark,
         remarkDate: remarkDate,
         report: report,
@@ -260,7 +259,7 @@ const PayableSummary = () => {
     },
     {
       field: "amountOMR",
-      headerName: `Amount in ${brandConfig?.currencyName}`,
+      headerName: `Amount in OMR`,
       flex: 2, // Takes up remaining space
     },
     {
@@ -356,7 +355,7 @@ const PayableSummary = () => {
     const excelData = reportList?.map((report) => {
       const vendorName = report?.vendorName ? report?.vendorName : "-";
       const amountOMR = (report.totalInvoiceAmount - report.paidAmount).toFixed(
-        brandConfig?.currencyName === "OMR" ? 3 : 2
+        3
       );
       const remark = report ? report.remark : "";
       const remarkDate =
@@ -365,7 +364,7 @@ const PayableSummary = () => {
           : "N/A";
       return {
         "Vendor Name": vendorName,
-        "Amount in OMR": `Amount In ${brandConfig?.currencyName} ${amountOMR}`,
+        "Amount in OMR": `Amount In OMR ${amountOMR}`,
         "Status/ Remarks": remark || "N/A",
         "Remark Date": remark ? remarkDate : "N/A",
       };
@@ -524,9 +523,7 @@ const PayableSummary = () => {
         <div className="total-receivable-card mb-4">
           <div className="total-receivable-content">
             <span className="label">Total Payables:</span>
-            <span className="amount">
-              {brandConfig?.currencyName} {totalPayable}
-            </span>
+            <span className="amount">OMR {totalPayable}</span>
           </div>
         </div>
       </div>

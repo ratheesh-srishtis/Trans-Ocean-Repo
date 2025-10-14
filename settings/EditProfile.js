@@ -12,15 +12,16 @@ import {
   deleteVisaDocument,
   deleteContractDocument,
   deletePassportDocument,
-} from "../../services/apiEmployee";
-import "../../css/payment.css";
+} from "../services/apiEmployee";
+import { editEmployeeProfile } from "../services/apiSettings";
+import "../css/payment.css";
 import Swal from "sweetalert2";
-import PopUp from "../PopUp";
-import Loader from "../Loader";
-const AddEmployee = () => {
+import PopUp from "../pages/PopUp";
+import Loader from "../pages/Loader";
+const EditProfile = ({ employeeObject }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const isEditing = location.state?.isEditing || false;
+  const isEditing = true;
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState({});
   const [EmployeeList, setEmployeeList] = useState([]);
@@ -45,30 +46,31 @@ const AddEmployee = () => {
   const fileInputRefLicence = useRef(null);
   const fileInputRefs = useRef({});
   const documentUrl = process.env.REACT_APP_ASSET_URL + "/";
+  console.log(employeeObject, "employeeObject_editprofile");
   const [uploadedFiles, setUploadedFiles] = useState({
     passportupload:
-      location.state?.passportDetails &&
-      location.state.passportDetails.length > 0
-        ? location.state.passportDetails[0].document
+      employeeObject?.passportDetails &&
+      employeeObject.passportDetails.length > 0
+        ? employeeObject.passportDetails[0].document
         : null,
     contractupload:
-      location.state?.contractDetails &&
-      location.state.contractDetails.length > 0
-        ? location.state.contractDetails[0].document
+      employeeObject?.contractDetails &&
+      employeeObject.contractDetails.length > 0
+        ? employeeObject.contractDetails[0].document
         : null,
     visaupload:
-      location.state?.visaDetails && location.state.visaDetails.length > 0
-        ? location.state.visaDetails[0].document
+      employeeObject?.visaDetails && employeeObject.visaDetails.length > 0
+        ? employeeObject.visaDetails[0].document
         : null,
 
     licenseupload:
-      location.state?.licenseDetails && location.state.licenseDetails.length > 0
-        ? location.state.licenseDetails[0].document
+      employeeObject?.licenseDetails && employeeObject.licenseDetails.length > 0
+        ? employeeObject.licenseDetails[0].document
         : null,
   });
   const initialFields =
-    location.state?.isEditing && location.state?.medicalRecordDetails?.length
-      ? location.state.medicalRecordDetails
+    employeeObject?.isEditing && employeeObject?.medicalRecordDetails?.length
+      ? employeeObject.medicalRecordDetails
       : [{ id: 1, description: "", relationship: "", medicalrord: "" }];
   // console.log('EW::',initialFields);
   const [fields, setFields] = useState(initialFields);
@@ -83,8 +85,8 @@ const AddEmployee = () => {
   };
 
   const certificateInitialFields =
-    location.state?.isEditing && location.state?.certificationDetails?.length
-      ? location.state.certificationDetails
+    employeeObject?.isEditing && employeeObject?.certificationDetails?.length
+      ? employeeObject.certificationDetails
       : [{ id: 1, description: "", relationship: "", certificatesRecord: "" }];
   // console.log('EW::',initialFields);
   const [certificateFields, setCertificateFields] = useState(
@@ -100,11 +102,11 @@ const AddEmployee = () => {
     setCertificateFields([...certificateFields, newField]);
   };
 
-  const existpassort = location.state?.passportDetails[0]?.document || "";
-  const existcontract = location.state?.contractDetails[0]?.document || "";
-  const existvisa = location.state?.visaDetails[0]?.document || "";
+  const existpassort = employeeObject?.passportDetails[0]?.document || "";
+  const existcontract = employeeObject?.contractDetails[0]?.document || "";
+  const existvisa = employeeObject?.visaDetails[0]?.document || "";
 
-  const existlicense = location.state?.licenseDetails[0]?.document || "";
+  const existlicense = employeeObject?.licenseDetails[0]?.document || "";
   const [desiginationlist, setDesiginations] = useState([]);
   const fetchAllDesignations = async () => {
     let listdesiginations = await getAllDesignations();
@@ -155,71 +157,72 @@ const AddEmployee = () => {
     certificateFields,
   ]);
   const [formData, setFormData] = useState({
-    employeeName: location.state?.employeeName || "",
-    username: location.state?.username || "",
-    password: location.state?.password || "",
-    employeeLastName: location.state?.employeeLastName || "",
-    dob: location.state?.dob || "",
-    address: location.state?.address || "",
-    nationality: location.state?.nationality || "",
-    city: location.state?.city || "",
-    state: location.state?.state || "",
-    postcode: location.state?.postcode || "",
-    contactNumber: location.state?.contactNumber || "",
-    email: location.state?.email || "",
-    passportNumber: location.state?.passportNumber || "",
-    iqamaNumber: location.state?.iqamaNumber || "",
-    dateOfJoining: location.state?.dateOfJoining || "",
-    designation: location.state?.designation._id || "",
+    employeeName: employeeObject?.employeeName || "",
+    username: employeeObject?.username || "",
+    password: employeeObject?.password || "",
+    employeeLastName: employeeObject?.employeeLastName || "",
+    dob: employeeObject?.dob || "",
+    address: employeeObject?.address || "",
+    nationality: employeeObject?.nationality || "",
+    city: employeeObject?.city || "",
+    state: employeeObject?.state || "",
+    postcode: employeeObject?.postcode || "",
+    contactNumber: employeeObject?.contactNumber || "",
+    email: employeeObject?.email || "",
+    passportNumber: employeeObject?.passportNumber || "",
+    iqamaNumber: employeeObject?.iqamaNumber || "",
+    dateOfJoining: employeeObject?.dateOfJoining || "",
+    designation: employeeObject?.designation || "",
     //department:location.state?.department || '',
-    officialEmail: location.state?.officialEmail || "",
-    profession: location.state?.profession || "",
-    passportDetails: location.state?.passportDetails || [],
+    officialEmail: employeeObject?.officialEmail || "",
+    profession: employeeObject?.profession || "",
+    passportDetails: employeeObject?.passportDetails || [],
     passportdetail_number:
-      location.state?.passportDetails[0]?.passportNumber || "",
+      employeeObject?.passportDetails[0]?.passportNumber || "",
     passportdetail_expiry:
-      location.state?.passportDetails[0]?.dateOfExpiry || "",
+      employeeObject?.passportDetails[0]?.dateOfExpiry || "",
     passportupload: uploadedFiles.passportupload
       ? uploadedFiles.passportupload.originalName
       : "",
-    contractDetails: location.state?.contractDetails || [],
-    contractdetail_name: location.state?.contractDetails[0]?.contractName || "",
+    contractDetails: employeeObject?.contractDetails || [],
+    contractdetail_name: employeeObject?.contractDetails[0]?.contractName || "",
     contractdetail_expiry:
-      location.state?.contractDetails[0]?.dateOfExpiry || "",
+      employeeObject?.contractDetails[0]?.dateOfExpiry || "",
     contractupload: uploadedFiles.contractupload
       ? uploadedFiles.contractupload.originalName
       : "",
-    visaDetails: location.state?.visaDetails || [],
-    visa_number: location.state?.visaDetails[0]?.visaNumber || "",
-    visa_expiry: location.state?.visaDetails[0]?.dateOfExpiry || "",
+    visaDetails: employeeObject?.visaDetails || [],
+    visa_number: employeeObject?.visaDetails[0]?.visaNumber || "",
+    visa_expiry: employeeObject?.visaDetails[0]?.dateOfExpiry || "",
     visaupload: uploadedFiles.visaupload
       ? uploadedFiles.visaupload.originalName
       : "",
 
-    licenseDetails: location.state?.licenseDetails || [],
-    license_number: location.state?.licenseDetails[0]?.licenseNumber || "",
-    license_date: location.state?.licenseDetails[0]?.dateOfExpiry || "",
+    licenseDetails: employeeObject?.licenseDetails || [],
+    license_number: employeeObject?.licenseDetails[0]?.licenseNumber || "",
+    license_date: employeeObject?.licenseDetails[0]?.dateOfExpiry || "",
     licenseupload: uploadedFiles.licenseupload
       ? uploadedFiles.licenseupload.originalName
       : "",
-    medicalRecordDetails: location.state?.medicalRecordDetails || [],
+    medicalRecordDetails: employeeObject?.medicalRecordDetails || [],
     medical_description: "",
     relationship: "",
 
-    certificationDetails: location.state?.certificationDetails || [],
+    certificationDetails: employeeObject?.certificationDetails || [],
     certification: "",
     certificateDescription: "",
-    reportingTo: location.state?.reportingTo || "",
-    reportingHead: location.state?.reportingHead || "",
+    reportingTo: employeeObject?.reportingTo || "",
+    reportingHead: employeeObject?.reportingHead || "",
   });
   const reloadpage = () => {
-    navigate("/employee");
-    //window.location.reload();
+    // navigate("/profile");
+    window.location.reload();
   };
 
   useEffect(() => {
     console.log(location.state, "location.state");
-  }, [location.state]);
+    console.log(employeeObject, "employeeObject");
+  }, [location.state, employeeObject]);
   const validateForm = () => {
     const newErrors = {};
     if (!formData.employeeName)
@@ -312,6 +315,7 @@ const AddEmployee = () => {
 
     setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
   };
+
   const handleDeleteFile = (fieldName, passed_id) => {
     console.log(fieldName, "fieldName");
     console.log(passed_id, "passed_id_handleDeleteFile");
@@ -713,10 +717,10 @@ const AddEmployee = () => {
       else formData.certificationDetails = certificationDetails;
       let response;
       if (isEditing) {
-        formData.employeeId = location.state?.employeeId;
+        formData.employeeId = employeeObject?.employeeId;
         // If password field is empty, send empty string
         formData.password = formData.password ? formData.password : "";
-        response = await editEmployee(formData);
+        response = await editEmployeeProfile(formData);
       } else {
         response = await saveEmployee(formData);
       }
@@ -754,14 +758,12 @@ const AddEmployee = () => {
           reportingTo: "",
           reportingHead: "",
         });
-      } else {
-        setOpenPopUp(true);
-        setMessage(response.message);
       }
     } catch (error) {
       setMessage(error);
     }
   };
+
   const handleFileChange = async (event) => {
     const imageData = event.target.files[0];
     if (!imageData) return;
@@ -1729,9 +1731,6 @@ const AddEmployee = () => {
           {/* certificate */}
           <div className="documentnewstyle shadow p-3 mb-4 bg-body-tertiary rounded">
             <div className="contract">Certificate Details</div>
-            {certificateFields?.length == 0 && (
-              <div className="text-center">No Certificate Records Added</div>
-            )}
             <div>
               {/* Add more certificate reord */}
               {certificateFields.map((field) => (
@@ -1888,9 +1887,6 @@ const AddEmployee = () => {
             <div className="contract">Medical Details</div>
             <div>
               {/* Add more medical reord */}
-              {fields?.length == 0 && (
-                <div className="text-center">No Medical Records Added</div>
-              )}
               {fields.map((field) => (
                 <div
                   key={isEditing ? field._id : field.id}
@@ -2053,4 +2049,4 @@ const AddEmployee = () => {
   );
 };
 
-export default AddEmployee;
+export default EditProfile;

@@ -8,7 +8,6 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useAuth } from "../../context/AuthContext";
 import PopUp from "../PopUp";
 import { changeServiceOrder } from "../../services/apiService";
-import brandConfig from "../../config/brandConfig";
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
   return (
@@ -69,15 +68,9 @@ const ViewOpsChargesTable = ({
 
   const formattedTotals = {
     quantity: totalValues?.quantity,
-    customerOMR: totalValues?.customerOMR.toFixed(
-      brandConfig?.currencyName === "OMR" ? 3 : 2
-    ),
-    customerVAT: totalValues?.customerVAT.toFixed(
-      brandConfig?.currencyName === "OMR" ? 3 : 2
-    ),
-    customerTotalUSD: totalValues?.customerTotalUSD.toFixed(
-      brandConfig?.currencyName === "OMR" ? 3 : 2
-    ),
+    customerOMR: totalValues?.customerOMR.toFixed(3),
+    customerVAT: totalValues?.customerVAT.toFixed(3),
+    customerTotalUSD: totalValues?.customerTotalUSD.toFixed(2),
   };
   const vendorTotalValues = chargesArray?.reduce(
     (totals, charge) => {
@@ -93,15 +86,9 @@ const ViewOpsChargesTable = ({
   // Format totals after calculations
   const formattedVendorTotals = {
     quantity: vendorTotalValues?.quantity,
-    vendorOMR: vendorTotalValues?.vendorOMR.toFixed(
-      brandConfig?.currencyName === "OMR" ? 3 : 2
-    ),
-    vendorVAT: vendorTotalValues?.vendorVAT.toFixed(
-      brandConfig?.currencyName === "OMR" ? 3 : 2
-    ),
-    vendorTotalUSD: vendorTotalValues?.vendorTotalUSD.toFixed(
-      brandConfig?.currencyName === "OMR" ? 3 : 2
-    ),
+    vendorOMR: vendorTotalValues?.vendorOMR.toFixed(3),
+    vendorVAT: vendorTotalValues?.vendorVAT.toFixed(3),
+    vendorTotalUSD: vendorTotalValues?.vendorTotalUSD.toFixed(2),
   };
 
   // Function to handle edit action
@@ -285,7 +272,7 @@ const ViewOpsChargesTable = ({
                             : "tableheadcolor"
                         }
                       >
-                        Amount ({brandConfig?.currencyName})
+                        Amount (OMR)
                       </th>
                       <th
                         className={
@@ -305,7 +292,7 @@ const ViewOpsChargesTable = ({
                             : "tableheadcolor"
                         }
                       >
-                        Total {brandConfig?.currencyName}
+                        Total OMR
                       </th>
                       <th
                         className={
@@ -378,29 +365,15 @@ const ViewOpsChargesTable = ({
                                   : charge?.subchargeName}
                               </td>
                               <>
-                                <td>
-                                  {charge.customerOMR.toFixed(
-                                    brandConfig?.currencyName === "OMR" ? 3 : 2
-                                  )}
-                                </td>
-                                <td>
-                                  {charge.customerVAT.toFixed(
-                                    brandConfig?.currencyName === "OMR" ? 3 : 2
-                                  )}
-                                </td>
+                                <td>{charge.customerOMR.toFixed(3)}</td>
+                                <td>{charge.customerVAT.toFixed(3)}</td>
                                 <td>
                                   {(
                                     parseFloat(charge.customerOMR) +
                                     parseFloat(charge.customerVAT)
-                                  ).toFixed(
-                                    brandConfig?.currencyName === "OMR" ? 3 : 2
-                                  )}
+                                  ).toFixed(3)}
                                 </td>
-                                <td>
-                                  {charge.customerTotalUSD.toFixed(
-                                    brandConfig?.currencyName === "OMR" ? 3 : 2
-                                  )}
-                                </td>
+                                <td>{charge.customerTotalUSD.toFixed(2)}</td>
 
                                 {isAction == true && (
                                   <>
@@ -459,9 +432,7 @@ const ViewOpsChargesTable = ({
                             {(
                               parseFloat(formattedTotals.customerOMR) +
                               parseFloat(formattedTotals.customerVAT)
-                            ).toFixed(
-                              brandConfig?.currencyName === "OMR" ? 3 : 2
-                            )}
+                            ).toFixed(3)}
                           </td>
                           <td>{formattedTotals.customerTotalUSD}</td>
                           {isAction == true && (
@@ -547,7 +518,7 @@ const ViewOpsChargesTable = ({
                             : "tableheadcolor"
                         }
                       >
-                        Amount ({brandConfig?.currencyName})
+                        Amount (OMR)
                       </th>
                       <th
                         className={
@@ -567,7 +538,7 @@ const ViewOpsChargesTable = ({
                             : "tableheadcolor"
                         }
                       >
-                        Total {brandConfig?.currencyName}
+                        Total OMR
                       </th>
                       <th
                         className={
@@ -673,10 +644,7 @@ const ViewOpsChargesTable = ({
 
                                 <td>
                                   {(() => {
-                                    const decimalPlaces =
-                                      brandConfig?.currencyName === "OMR"
-                                        ? 3
-                                        : 2;
+                                    const decimalPlaces = 3;
                                     const vendorIds = [
                                       "vendorId",
                                       "vendor2Id",
@@ -724,10 +692,7 @@ const ViewOpsChargesTable = ({
 
                                 <td>
                                   {(() => {
-                                    const decimalPlaces =
-                                      brandConfig?.currencyName === "OMR"
-                                        ? 3
-                                        : 2;
+                                    const decimalPlaces = 3;
                                     const vendorIds = [
                                       "vendorId",
                                       "vendor2Id",
@@ -774,10 +739,7 @@ const ViewOpsChargesTable = ({
                                 </td>
                                 <td>
                                   {(() => {
-                                    const decimalPlaces =
-                                      brandConfig?.currencyName === "OMR"
-                                        ? 3
-                                        : 2;
+                                    const decimalPlaces = 3;
                                     const vendorIds = [
                                       "vendorId",
                                       "vendor2Id",
@@ -826,10 +788,7 @@ const ViewOpsChargesTable = ({
 
                                 <td>
                                   {(() => {
-                                    const decimalPlaces =
-                                      brandConfig?.currencyName === "OMR"
-                                        ? 3
-                                        : 2;
+                                    const decimalPlaces = 3;
                                     const vendorIds = [
                                       "vendorId",
                                       "vendor2Id",
@@ -931,9 +890,7 @@ const ViewOpsChargesTable = ({
                                   if (!isNaN(val) && val !== 0) totalOMR += val;
                                 });
                               });
-                              return totalOMR.toFixed(
-                                brandConfig?.currencyName === "OMR" ? 3 : 2
-                              );
+                              return totalOMR.toFixed(3);
                             })()}
                           </td>
                           {/* Vendor VAT Total: sum all vendorVAT, vendor2VAT, vendor3VAT, vendor4VAT for all charges */}
@@ -951,9 +908,7 @@ const ViewOpsChargesTable = ({
                                   if (!isNaN(val) && val !== 0) totalVAT += val;
                                 });
                               });
-                              return totalVAT.toFixed(
-                                brandConfig?.currencyName === "OMR" ? 3 : 2
-                              );
+                              return totalVAT.toFixed(3);
                             })()}
                           </td>
                           {/* Vendor Total OMR: sum all (vendorOMR + vendorVAT), (vendor2OMR + vendor2VAT), ... for all charges */}
@@ -988,9 +943,7 @@ const ViewOpsChargesTable = ({
                                   if (sum !== 0) total += sum;
                                 });
                               });
-                              return total.toFixed(
-                                brandConfig?.currencyName === "OMR" ? 3 : 2
-                              );
+                              return total.toFixed(3);
                             })()}
                           </td>
                           {/* Vendor Total USD: sum all vendorTotalUSD, vendor2TotalUSD, vendor3TotalUSD, vendor4TotalUSD for all charges */}
@@ -1008,9 +961,7 @@ const ViewOpsChargesTable = ({
                                   if (!isNaN(val) && val !== 0) totalUSD += val;
                                 });
                               });
-                              return totalUSD.toFixed(
-                                brandConfig?.currencyName === "OMR" ? 3 : 2
-                              );
+                              return totalUSD.toFixed(2);
                             })()}
                           </td>
                           {isAction == true && (

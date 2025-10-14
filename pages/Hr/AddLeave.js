@@ -7,7 +7,8 @@ import {
 } from "../../services/apiLeavePortal";
 import PopUp from ".././PopUp";
 import "../../css/payment.css";
-
+import Loader from "../Loader";
+import { se } from "date-fns/locale";
 const AddLeave = ({
   open,
   onClose,
@@ -19,6 +20,7 @@ const AddLeave = ({
   setErrors,
 }) => {
   console.log("Received leavevalues:", leavevalues);
+  const [isLoading, setIsLoading] = useState(false); // Loader state
 
   const [message, setMessage] = useState("");
   const [empLeaveTypes, SetEmpLeaveTypes] = useState("");
@@ -112,6 +114,7 @@ const AddLeave = ({
     if (!validateForm()) return;
 
     try {
+      setIsLoading(true); // Show loader
       let response = "";
       if (editMode) {
         formData.leaveId = leavevalues._id;
@@ -122,6 +125,7 @@ const AddLeave = ({
       }
 
       if (response.status === true) {
+        setIsLoading(false); // Hide loader
         setOpenPopUp(true);
         setMessage(response.message);
         setFormData({
@@ -133,6 +137,8 @@ const AddLeave = ({
         });
         onClose();
       } else {
+        setIsLoading(false); // Hide loader
+
         setMessage(response.message);
         setOpenPopUp(true);
       }
@@ -300,6 +306,7 @@ const AddLeave = ({
         </DialogContent>
       </Dialog>
       {openPopUp && <PopUp message={message} closePopup={fetchLeaves} />}
+      <Loader isLoading={isLoading} />
     </>
   );
 };

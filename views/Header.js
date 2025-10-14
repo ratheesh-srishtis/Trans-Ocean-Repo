@@ -135,6 +135,10 @@ const Header = () => {
       return "Employee Details Modifications";
     } else if (location.pathname == "/leave-requests") {
       return "Leave Requests";
+    } else if (location.pathname == "/leave") {
+      return "Leave";
+    } else if (location.pathname == "/view-employee-details") {
+      return "View Employee Details";
     }
 
     // Add more conditions as needed for other routes
@@ -279,7 +283,7 @@ const Header = () => {
 
           <div className="header--title d-none d-md-block">
             <h5 class="mb-0">{getHeaderText()}</h5>
-            <div className="version">Version: 0.105</div>
+            <div className="version">Version: 0.107</div>
           </div>
 
           <div className="d-flex align-items-center flex-row-reverse marginnew ">
@@ -289,10 +293,14 @@ const Header = () => {
                 type="button"
                 className="admin-button text-start namefinance ms-md-2 d-none d-md-block"
               >
-                {formatUserType(loginResponse?.data?.userRole?.roleType)}
+                {loginResponse?.isEmployee
+                  ? loginResponse?.data?.employeeName
+                  : formatUserType(loginResponse?.data?.name)}
 
                 <div className="nameuser d-none d-md-block">
-                  {loginResponse?.data?.name}
+                  {loginResponse?.isEmployee
+                    ? "Employee"
+                    : formatUserType(loginResponse?.data?.userRole?.roleType)}
                 </div>
               </button>
               <button

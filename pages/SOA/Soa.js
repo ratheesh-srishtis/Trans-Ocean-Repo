@@ -8,10 +8,7 @@ import { getAllCustomers } from "../../services/apiSettings";
 import { Box, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import "../../css/soa.css";
-import brandConfig from "../../config/brandConfig";
-const Soa = ({ aedConversionRate }) => {
-  console.log("Brand Config:", brandConfig);
-  console.log("aedConversionRate_soa", aedConversionRate);
+const Soa = ({}) => {
   // Importing the Group image
   const Group = require("../../assets/images/soa.png");
   const [customerList, setCustomerList] = useState([]);
@@ -21,7 +18,7 @@ const Soa = ({ aedConversionRate }) => {
   const [FilterName, setFilterName] = useState("");
   const [FilterValue, setFilterValue] = useState("");
   const [listpayload, setPayload] = useState("");
-  const [showAED, setShowAED] = useState(brandConfig?.currencyName === "AED");
+  const [showAED, setShowAED] = useState(false);
   const fetchSoa = async (payload) => {
     try {
       const soaDetails = await getSOA(payload);
@@ -98,18 +95,10 @@ const Soa = ({ aedConversionRate }) => {
         (item.discountAmount || 0);
 
       let balanceusd;
-      if (brandConfig?.currencyName === "OMR") {
-        balanceusd = (balance * 2.62).toFixed(3);
-      } else if (brandConfig?.currencyName === "AED") {
-        balanceusd = (balance / aedConversionRate).toFixed(2);
-      }
+      balanceusd = (balance * 2.62).toFixed(2);
 
       let balanceAed;
-      if (brandConfig?.currencyName === "OMR") {
-        balanceAed = (balance * 2.62).toFixed(3);
-      } else if (brandConfig?.currencyName === "AED") {
-        balanceAed = (balance / aedConversionRate).toFixed(2);
-      }
+      balanceAed = (balanceusd * 3.6725).toFixed(2);
       const baseRow = {
         "Quotation Number": item.pdaNumber || "N/A",
         "Invoice NO": item.invoiceId || "N/A",
@@ -118,42 +107,31 @@ const Soa = ({ aedConversionRate }) => {
         "Vessel Name": item.vesselId ? item.vesselId.vesselName : "N/A",
         "Port Name": item.portId ? item.portId.portName : "N/A",
         "Total OMR": item.totalAmountOMR
-          ? item.totalAmountOMR.toFixed(
-              brandConfig?.currencyName === "OMR" ? 3 : 2
-            )
+          ? item.totalAmountOMR.toFixed(3)
           : "N/A",
-        "Paid OMR": item.paidAmount
-          ? item.paidAmount.toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2)
-          : "N/A",
+        "Paid OMR": item.paidAmount ? item.paidAmount.toFixed(3) : "N/A",
 
         Discount:
           item.discountAmount !== undefined ? item.discountAmount : "N/A",
-        [brandConfig?.currencyName === "AED"
-          ? "Balance Overview In AED"
-          : "Balance Overview In OMR"]:
-          balance.toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2) || "N/A",
-        "Total USD":
-          (item.totalAmountOMR / aedConversionRate)?.toFixed(
-            brandConfig?.currencyName === "OMR" ? 3 : 2
-          ) || "N/A",
+        ["Balance Overview In OMR"]: balance.toFixed(3) || "N/A",
+        "Total USD": (item.totalAmountOMR * 2.62)?.toFixed(3) || "N/A",
         "Balance Overview In USD": balanceusd || "N/A",
         "Days Overdue": daysDue.toString() || "N/A",
       };
-      if (showAED && brandConfig?.currencyName !== "AED")
-        baseRow["Balance Overview In AED"] = balanceAed || "N/A";
+      if (showAED) baseRow["Balance Overview In AED"] = balanceAed || "N/A";
       return baseRow;
     });
 
     // Calculate totals for the required columns
     const totalOMR = soaList
       .reduce((sum, item) => sum + (item.totalAmountOMR || 0), 0)
-      .toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2);
+      .toFixed(3);
     const paidOMR = soaList
       .reduce((sum, item) => sum + (item.paidAmount || 0), 0)
-      .toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2);
+      .toFixed(3);
     const discountTotal = soaList
       .reduce((sum, item) => sum + (item.discountAmount || 0), 0)
-      .toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2);
+      .toFixed(3);
     const balanceOMR = soaList
       .reduce(
         (sum, item) =>
@@ -163,7 +141,7 @@ const Soa = ({ aedConversionRate }) => {
             (item.discountAmount || 0)),
         0
       )
-      .toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2);
+      .toFixed(3);
 
     const balanceUSD = soaList
       .reduce(
@@ -171,27 +149,26 @@ const Soa = ({ aedConversionRate }) => {
           sum +
           ((item.totalAmountOMR || 0) -
             (item.paidAmount || 0) -
-            (item.discountAmount || 0)) /
-            aedConversionRate,
+            (item.discountAmount || 0)) *
+            2.62,
         0
       )
-      .toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2);
+      .toFixed(2);
     const balanceAED = soaList
       .reduce(
         (sum, item) =>
           sum +
           ((item.totalAmountOMR || 0) -
             (item.paidAmount || 0) -
-            (item.discountAmount || 0)),
+            (item.discountAmount || 0)) *
+            2.62 *
+            3.6725,
         0
       )
-      .toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2);
+      .toFixed(3);
     const totalUSD = soaList
-      .reduce(
-        (sum, item) => sum + (item.totalAmountOMR || 0) / aedConversionRate,
-        0
-      )
-      .toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2);
+      .reduce((sum, item) => sum + (item.totalAmountOMR || 0) * 2.62, 0)
+      .toFixed(2);
 
     // Add totals row
     const totalsRow = {
@@ -205,9 +182,7 @@ const Soa = ({ aedConversionRate }) => {
       "Paid OMR": paidOMR,
       Discount: discountTotal,
 
-      [brandConfig?.currencyName === "AED"
-        ? "Balance Overview In AED"
-        : "Balance Overview In OMR"]: balanceOMR,
+      ["Balance Overview In OMR"]: balanceOMR,
       "Total USD": totalUSD,
       "Balance Overview In USD": balanceUSD,
       "Days Overdue": "",
@@ -215,30 +190,77 @@ const Soa = ({ aedConversionRate }) => {
     if (showAED) totalsRow["Balance Overview In AED"] = balanceAED;
     worksheetData.push(totalsRow);
 
-    // Set the columns order and widths
+    // Set the columns order and widths with proper sizing for all columns
     const columns = [
-      { key: "Quotation Number", wch: 17 },
-      { key: "Invoice NO", wch: 16 },
-      { key: "FDA Date", wch: 10 },
-      { key: "Customer Name", wch: 20 },
-      { key: "Vessel Name", wch: 20 },
-      { key: "Port Name", wch: 20 },
-      { key: "Total OMR", wch: 25 },
-      { key: "Paid OMR", wch: 25 },
-      { key: "Discount", wch: 25 },
+      { key: "Quotation Number", wch: 20 },
+      { key: "Invoice NO", wch: 18 },
+      { key: "FDA Date", wch: 12 },
+      { key: "Customer Name", wch: 25 },
+      { key: "Vessel Name", wch: 25 },
+      { key: "Port Name", wch: 25 },
+      { key: "Total OMR", wch: 15 },
+      { key: "Paid OMR", wch: 15 },
+      { key: "Discount", wch: 12 },
+      {
+        key: "Balance Overview In OMR",
+        wch: 30,
+      },
+      { key: "Total USD", wch: 15 },
+      { key: "Balance Overview In USD", wch: 30 },
     ];
 
-    if (showAED && brandConfig?.currencyName !== "AED") {
-      columns.push({ key: "Balance Overdue In AED", wch: 25 });
+    if (showAED) {
+      columns.push({ key: "Balance Overview In AED", wch: 30 });
     }
     // Always add Days Overdue at the end
-    columns.push({ key: "Days Overdue", wch: 15 });
+    columns.push({ key: "Days Overdue", wch: 18 });
 
     // Convert the data to a worksheet
     const worksheet = XLSX.utils.json_to_sheet(worksheetData, {
       header: columns.map((col) => col.key),
     });
-    worksheet["!cols"] = columns;
+
+    // Set column widths
+    worksheet["!cols"] = columns.map((col) => ({ wch: col.wch }));
+
+    // Add styling to headers - make them bold and add background color
+    const headerRow = 1; // First row is headers
+    columns.forEach((col, index) => {
+      const cellAddress = XLSX.utils.encode_cell({ r: 0, c: index });
+      if (worksheet[cellAddress]) {
+        worksheet[cellAddress].s = {
+          font: { bold: true },
+          fill: { fgColor: { rgb: "EEEEEE" } },
+          border: {
+            top: { style: "thin" },
+            bottom: { style: "thin" },
+            left: { style: "thin" },
+            right: { style: "thin" },
+          },
+        };
+      }
+    });
+
+    // Style the totals row (last row)
+    const totalRowIndex = worksheetData.length - 1;
+    columns.forEach((col, index) => {
+      const cellAddress = XLSX.utils.encode_cell({
+        r: totalRowIndex,
+        c: index,
+      });
+      if (worksheet[cellAddress]) {
+        worksheet[cellAddress].s = {
+          font: { bold: true },
+          fill: { fgColor: { rgb: "F5F5F5" } },
+          border: {
+            top: { style: "thin" },
+            bottom: { style: "thin" },
+            left: { style: "thin" },
+            right: { style: "thin" },
+          },
+        };
+      }
+    });
 
     // Append the worksheet to the workbook
     XLSX.utils.book_append_sheet(workbook, worksheet, "DataGrid");
@@ -382,26 +404,26 @@ const Soa = ({ aedConversionRate }) => {
     },
     {
       field: "totalomr",
-      headerName: `Total ${brandConfig?.currencyName}`,
+      headerName: `Total OMR`,
       flex: 2,
       minWidth: 50,
       renderHeader: () => (
         <span className="header-class">
           Total
           <br />
-          {brandConfig?.currencyName}
+          OMR
         </span>
       ),
     },
     {
       field: "paidomr",
-      headerName: `Paid ${brandConfig?.currencyName}`,
+      headerName: `Paid OMR`,
       flex: 2,
       renderHeader: () => (
         <span className="header-class">
           Paid
           <br />
-          {brandConfig?.currencyName}
+          OMR
         </span>
       ),
     },
@@ -413,14 +435,14 @@ const Soa = ({ aedConversionRate }) => {
     },
     {
       field: "balanceOMR",
-      headerName: `Balanceoverdue ${brandConfig?.currencyName}`,
+      headerName: `Balanceoverdue OMR`,
       flex: 2,
       renderHeader: () => (
         <span className="header-class">
           Balance
           <br />
           overdue <br />
-          {brandConfig?.currencyName}
+          OMR
         </span>
       ),
     },
@@ -444,23 +466,21 @@ const Soa = ({ aedConversionRate }) => {
       ),
     },
     // Only show Balanceoverdue AED if currency is NOT AED
-    ...(brandConfig?.currencyName !== "AED"
-      ? [
-          {
-            field: "balanceAED",
-            headerName: "Balanceoverdue AED",
-            flex: 2,
-            renderHeader: () => (
-              <span className="header-class">
-                Balance
-                <br />
-                overdue <br />
-                AED
-              </span>
-            ),
-          },
-        ]
-      : []),
+    ...[
+      {
+        field: "balanceAED",
+        headerName: "Balanceoverdue AED",
+        flex: 2,
+        renderHeader: () => (
+          <span className="header-class">
+            Balance
+            <br />
+            overdue <br />
+            AED
+          </span>
+        ),
+      },
+    ],
     {
       field: "days",
       headerName: "Days overdue",
@@ -575,20 +595,18 @@ const Soa = ({ aedConversionRate }) => {
             </div>
           </div>
           <div className=" d-flex">
-            {brandConfig?.currencyName !== "AED" && (
-              <div className="d-flex align-items-center me-3">
-                <input
-                  type="checkbox"
-                  id="showAED"
-                  checked={showAED}
-                  onChange={(e) => setShowAED(e.target.checked)}
-                  style={{ marginRight: 6 }}
-                />
-                <label htmlFor="showAED" style={{ marginBottom: 0 }}>
-                  Show AED in Excel
-                </label>
-              </div>
-            )}
+            <div className="d-flex align-items-center me-3">
+              <input
+                type="checkbox"
+                id="showAED"
+                checked={showAED}
+                onChange={(e) => setShowAED(e.target.checked)}
+                style={{ marginRight: 6 }}
+              />
+              <label htmlFor="showAED" style={{ marginBottom: 0 }}>
+                Show AED in Excel
+              </label>
+            </div>
             <div className="downloadreport">
               {" "}
               <button
@@ -643,7 +661,7 @@ const Soa = ({ aedConversionRate }) => {
                   item.totalAmountOMR -
                   (item.paidAmount || 0) -
                   (item.discountAmount || 0)
-                ).toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2);
+                ).toFixed(3);
               } else {
                 balance = 0;
               }
@@ -653,18 +671,8 @@ const Soa = ({ aedConversionRate }) => {
               // const balanceAed = (balanceusd * 3.6725).toFixed(4);
 
               let balanceUsdNew;
-              if (brandConfig?.currencyName === "OMR") {
-                balanceUsdNew = (balance * 2.62).toFixed(
-                  brandConfig?.currencyName === "OMR" ? 3 : 2
-                );
-              } else if (brandConfig?.currencyName === "AED") {
-                balanceUsdNew = (balance / aedConversionRate).toFixed(
-                  brandConfig?.currencyName === "OMR" ? 3 : 2
-                );
-              }
-              const balanceAed = (balanceUsdNew / aedConversionRate).toFixed(
-                brandConfig?.currencyName === "OMR" ? 3 : 2
-              );
+              balanceUsdNew = (balance * 2.62).toFixed(2);
+              const balanceAed = (balanceUsdNew * 3.6725).toFixed(2);
 
               return {
                 id: item._id,
@@ -677,27 +685,19 @@ const Soa = ({ aedConversionRate }) => {
                 vessel: item.vesselId ? item.vesselId.vesselName : "N/A",
                 port: item.portId ? item.portId.portName : "N/A",
                 totalomr: item.totalAmountOMR
-                  ? item.totalAmountOMR.toFixed(
-                      brandConfig?.currencyName === "OMR" ? 3 : 2
-                    )
+                  ? item.totalAmountOMR.toFixed(3)
                   : "N/A",
-                paidomr: item.paidAmount
-                  ? item.paidAmount.toFixed(
-                      brandConfig?.currencyName === "OMR" ? 3 : 2
-                    )
-                  : "N/A",
+                paidomr: item.paidAmount ? item.paidAmount.toFixed(3) : "N/A",
                 discount:
                   item.discountAmount !== undefined
                     ? item.discountAmount
                     : "N/A",
                 balanceOMR: balance || "N/A",
                 balanceUSD: balanceUsdNew || "N/A",
-                totalUSD:
-                  (item.totalAmountOMR / aedConversionRate)?.toFixed(2) ||
-                  "N/A",
-                ...(brandConfig?.currencyName !== "AED" && {
+                totalUSD: (item.totalAmountOMR * 2.62)?.toFixed(2) || "N/A",
+                ...{
                   balanceAED: balanceAed || "N/A",
-                }),
+                },
                 days: daysDue,
                 ...item,
               };
@@ -714,13 +714,13 @@ const Soa = ({ aedConversionRate }) => {
                 port: "",
                 totalomr: soaList
                   .reduce((sum, item) => sum + (item.totalAmountOMR || 0), 0)
-                  .toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2),
+                  .toFixed(3),
                 paidomr: soaList
                   .reduce((sum, item) => sum + (item.paidAmount || 0), 0)
-                  .toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2),
+                  .toFixed(3),
                 discount: soaList
                   .reduce((sum, item) => sum + (item.discountAmount || 0), 0)
-                  .toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2),
+                  .toFixed(3),
                 balanceOMR: soaList
                   .reduce(
                     (sum, item) =>
@@ -730,38 +730,22 @@ const Soa = ({ aedConversionRate }) => {
                         (item.discountAmount || 0)),
                     0
                   )
-                  .toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2),
+                  .toFixed(3),
                 totalUSD: soaList
+                  .reduce((sum, item) => sum + item.totalAmountOMR * 2.62, 0)
+                  .toFixed(2),
+                balanceUSD: soaList
                   .reduce(
                     (sum, item) =>
-                      sum + item.totalAmountOMR / aedConversionRate,
+                      sum +
+                      ((item.totalAmountOMR || 0) -
+                        (item.paidAmount || 0) -
+                        (item.discountAmount || 0)) *
+                        2.62,
                     0
                   )
-                  .toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2),
-                balanceUSD:
-                  brandConfig?.currencyName === "OMR"
-                    ? soaList
-                        .reduce(
-                          (sum, item) =>
-                            sum +
-                            ((item.totalAmountOMR || 0) -
-                              (item.paidAmount || 0) -
-                              (item.discountAmount || 0)) *
-                              2.62,
-                          0
-                        )
-                        .toFixed(3)
-                    : soaList
-                        .reduce(
-                          (sum, item) =>
-                            sum +
-                            ((item.totalAmountOMR || 0) -
-                              (item.paidAmount || 0) -
-                              (item.discountAmount || 0)) /
-                              aedConversionRate,
-                          0
-                        )
-                        .toFixed(2),
+                  .toFixed(2),
+
                 balanceAED: soaList
                   .reduce(
                     (sum, item) =>
@@ -773,7 +757,7 @@ const Soa = ({ aedConversionRate }) => {
                         3.6725,
                     0
                   )
-                  .toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2),
+                  .toFixed(2),
                 days: "",
               },
             ])}

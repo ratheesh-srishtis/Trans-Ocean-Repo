@@ -9,7 +9,6 @@ import {
 import { saveAs } from "file-saver";
 import "../../css/viewvoucher.css";
 import moment from "moment";
-import brandConfig from "../../config/brandConfig";
 import { useMedia } from "../../context/MediaContext";
 const { ToWords } = require("to-words");
 const toWords = new ToWords();
@@ -48,8 +47,8 @@ const ViewCustomerVoucher = ({ open, onClose, getvoucher }) => {
         currencyUnit = "Dollars";
         break;
       case "OMR":
-        currencyFullName = "Omani Rial";
-        currencyUnit = "Rials";
+        currencyFullName = "Omani Riyal";
+        currencyUnit = "Riyals";
         break;
       default:
         currencyFullName =

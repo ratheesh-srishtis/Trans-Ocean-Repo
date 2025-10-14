@@ -52,17 +52,15 @@ const MediaSettings = () => {
 
   return (
     <>
-      <div className="container media-settings-container">
-        <div className="row mb-4">
-          <div className="col-12 text-center">
-            <h6>Media Settings</h6>
-          </div>
+      <div className=" media-settings-container">
+        <div className="row ">
+          <div className="col-12 text-center fontmedia">Media Settings</div>
         </div>
         {/* Logo Upload Section */}
-        <div className="row justify-content-center mb-4">
-          <div className="col-md-4 col-lg-4 col-xl-4 col-12 d-flex justify-content-center">
+        <div className="row  mb-4">
+          <div className="col-md-4 col-lg-4 col-xl-3 col-12 ">
+            <h6 className="subheadmediafont">Logo Upload</h6>
             <div className="media-logo-preview">
-              <h6>Logo Upload</h6>
               <img
                 src={logoPreview}
                 alt="Current Logo"
@@ -82,9 +80,9 @@ const MediaSettings = () => {
               />
             </div>
           </div>
-          <div className="col-md-4 col-lg-4 col-xl-4  col-12 d-flex justify-content-center">
+          <div className="col-md-4 col-lg-4 col-xl-3  col-12 ">
+            <h6 className="subheadmediafont">PDF Header Image Upload</h6>
             <div className="media-logo-preview">
-              <h6>PDF Header Image Upload</h6>
               <img
                 src={headerPreview}
                 alt="PDF Header"
@@ -104,9 +102,9 @@ const MediaSettings = () => {
               />
             </div>
           </div>
-          <div className="col-md-4 col-lg-4 col-xl-4  col-12 d-flex justify-content-center">
+          <div className="col-md-4 col-lg-4 col-xl-3 col-12 ">
+            <h6 className="subheadmediafont">PDF Footer Image Upload</h6>
             <div className="media-logo-preview">
-              <h6>PDF Footer Image Upload</h6>
               <img
                 src={footerPreview}
                 alt="PDF Footer"
@@ -126,12 +124,9 @@ const MediaSettings = () => {
               />
             </div>
           </div>
-        </div>
-
-        <div className="row justify-content-center my-4">
-          <div className="col-md-4 col-lg-4 col-xl-4  col-12 d-flex justify-content-center">
+          <div className="col-md-4 col-lg-4 col-xl-3  col-12 ">
+            <h6 className="subheadmediafont">Admin Logo</h6>
             <div className="media-logo-preview">
-              <h6>Admin Logo</h6>
               <img
                 src={adminDepartmentLogo}
                 alt="PDF Footer"
@@ -151,9 +146,12 @@ const MediaSettings = () => {
               />
             </div>
           </div>
-          <div className="col-md-4 col-lg-4 col-xl-4  col-12 d-flex justify-content-center">
+        </div>
+
+        <div className="row secand-section-margin">
+          <div className="col-md-4 col-lg-4 col-xl-3  col-12 ">
+            <h6 className="subheadmediafont">Finance Logo</h6>
             <div className="media-logo-preview">
-              <h6>Finance Logo</h6>
               <img
                 src={financeDepartmentLogo}
                 alt="PDF Footer"
@@ -173,9 +171,9 @@ const MediaSettings = () => {
               />
             </div>
           </div>
-          <div className="col-md-4 col-lg-4 col-xl-4  col-12 d-flex justify-content-center">
+          <div className="col-md-4 col-lg-4 col-xl-3  col-12">
+            <h6 className="subheadmediafont">Operation Logo</h6>
             <div className="media-logo-preview">
-              <h6>Operation Logo</h6>
               <img
                 src={operationsDepartmentLogo}
                 alt="PDF Footer"
@@ -195,11 +193,9 @@ const MediaSettings = () => {
               />
             </div>
           </div>
-        </div>
-        <div className="row justify-content-center mb-4">
-          <div className="col-md-4 col-lg-4 col-xl-4  col-12 d-flex justify-content-center">
+          <div className="col-md-4 col-lg-4 col-xl-3 col-12 ">
+            <h6 className="subheadmediafont">HR Logo</h6>
             <div className="media-logo-preview">
-              <h6>HR Logo</h6>
               <img
                 src={hrDepartmentLogo}
                 alt="PDF Footer"

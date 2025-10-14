@@ -250,26 +250,42 @@ const VendorVouchers = () => {
       field: "actions",
       headerName: "Action",
       flex: 5,
-      renderCell: (params) => (
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <button
-            className="btn btna submitpaymentbutton btnfsize"
-            onClick={() => handleView(params.row)}
-            style={{ marginRight: "8px" }} // Add some space between buttons
-          >
-            View
-          </button>
-          <IconButton color="primary" onClick={() => handleEdit(params.row)}>
-            <EditIcon sx={{ fontSize: "19px" }} />
-          </IconButton>
-          <IconButton
-            color="secondary"
-            onClick={() => handleDelete(params.row)}
-          >
-            <DeleteIcon sx={{ fontSize: "19px" }} />
-          </IconButton>
-        </div>
-      ),
+      renderCell: (params) => {
+        console.log("params", params);
+        const hasValidVendorId =
+          params.row.vendorId &&
+          params.row.vendorId !== null &&
+          params.row.vendorId !== undefined &&
+          params.row.vendorId !== "";
+
+        return (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <button
+              className="btn btna submitpaymentbutton btnfsize"
+              onClick={() => handleView(params.row)}
+              style={{ marginRight: "8px" }} // Add some space between buttons
+            >
+              View
+            </button>
+            {!hasValidVendorId && (
+              <>
+                <IconButton
+                  color="primary"
+                  onClick={() => handleEdit(params.row)}
+                >
+                  <EditIcon sx={{ fontSize: "19px" }} />
+                </IconButton>
+                <IconButton
+                  color="secondary"
+                  onClick={() => handleDelete(params.row)}
+                >
+                  <DeleteIcon sx={{ fontSize: "19px" }} />
+                </IconButton>
+              </>
+            )}
+          </div>
+        );
+      },
     },
   ];
 

@@ -31,7 +31,6 @@ import {
 import PopUp from "./PopUp";
 import moment from "moment";
 import { getAllFinanceEmployees } from "../services/apiPayment";
-import brandConfig from "../config/brandConfig";
 const transwave = require("../assets/images/EPDA-MV-TBN-SALALAH-CARGO-(3)-1.jpg");
 const Group = require("../assets/images/TRANSocean-LOGO.png");
 
@@ -354,13 +353,9 @@ const InvoicePage = ({
                 <th className="tabheadinvoice">Sl No:</th>
                 <th className="tabheadinvoice">Charges </th>
                 <th className="tabheadinvoice">Quantity</th>
-                <th className="tabheadinvoice">
-                  Amount ({brandConfig?.currencyName})
-                </th>
+                <th className="tabheadinvoice">Amount (OMR)</th>
                 <th className="tabheadinvoice">VAT Amount</th>
-                <th className="tabheadinvoice">
-                  Total {brandConfig?.currencyName}
-                </th>
+                <th className="tabheadinvoice">Total OMR</th>
                 <th className="tabheadinvoice">Total USD</th>
                 <th className="tabheadinvoice">Documents</th>
                 <th className="tabheadinvoice">Attachments</th>
@@ -376,25 +371,19 @@ const InvoicePage = ({
                     </td>
                     <td className="tdstylinvoice">{charge?.quantity}</td>
                     <td className="tdstylinvoice">
-                      {charge.customerOMR.toFixed(
-                        brandConfig?.currencyName === "OMR" ? 3 : 2
-                      )}
+                      {charge.customerOMR.toFixed(3)}
                     </td>
                     <td className="tdstylinvoice">
-                      {charge.customerVAT.toFixed(
-                        brandConfig?.currencyName === "OMR" ? 3 : 2
-                      )}
+                      {charge.customerVAT.toFixed(3)}
                     </td>
                     <td className="tdstylinvoice">
                       {(
                         parseFloat(charge.customerOMR) +
                         parseFloat(charge.customerVAT)
-                      ).toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2)}
+                      ).toFixed(3)}
                     </td>
                     <td className="tdstylinvoice">
-                      {charge.customerTotalUSD.toFixed(
-                        brandConfig?.currencyName === "OMR" ? 3 : 2
-                      )}
+                      {charge.customerTotalUSD.toFixed(2)}
                     </td>
 
                     {charge?.documents?.length > 0 && (

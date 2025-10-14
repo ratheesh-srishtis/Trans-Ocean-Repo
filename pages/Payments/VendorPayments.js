@@ -17,7 +17,6 @@ import Swal from "sweetalert2";
 import "../../css/payment.css";
 import PopUp from "../PopUp";
 import ViewVendorVoucher from "./ViewVendorVoucher";
-import brandConfig from "../../config/brandConfig";
 const VendorPayments = () => {
   const Group = require("../../assets/images/payments.png");
   const paymentIcon = require("../../assets/images/payment-icon.png");
@@ -98,29 +97,15 @@ const VendorPayments = () => {
     try {
       const Listpayments = await getVendorPayments(payload);
       setVendorpayment(Listpayments?.payments || []);
-      setInvoiceAmount(
-        (Listpayments?.totalInvoiceAmount || 0).toFixed(
-          brandConfig?.currencyName === "OMR" ? 3 : 2
-        )
-      );
-      setPaidAmount(
-        (Listpayments?.paidAmount || 0).toFixed(
-          brandConfig?.currencyName === "OMR" ? 3 : 2
-        )
-      );
-      setDiscountAmount(
-        (Listpayments?.discountAmountOMR || 0).toFixed(
-          brandConfig?.currencyName === "OMR" ? 3 : 2
-        )
-      );
+      setInvoiceAmount((Listpayments?.totalInvoiceAmount || 0).toFixed(3));
+      setPaidAmount((Listpayments?.paidAmount || 0).toFixed(3));
+      setDiscountAmount((Listpayments?.discountAmountOMR || 0).toFixed(3));
 
       const totalAmount = Listpayments?.totalInvoiceAmount || 0;
       const amountpaid = Listpayments?.paidAmount || 0;
       const discount = Listpayments?.discountAmountOMR || 0;
       const balance = totalAmount - amountpaid - discount;
-      setBalanceAmount(
-        parseFloat(balance.toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2))
-      );
+      setBalanceAmount(parseFloat(balance.toFixed(3)));
     } catch (error) {
       console.log("Error in Api", error);
     }
@@ -563,17 +548,11 @@ const VendorPayments = () => {
 
         <div className="paymeamount">
           <div className=" d-flex">
-            <div className="totalinvocie">
-              {" "}
-              Total Invoice Amount({brandConfig?.currencyName}):
-            </div>{" "}
+            <div className="totalinvocie"> Total Invoice Amount(OMR):</div>{" "}
             <div className="amountpayment"> {totalInvoiceAmount} </div>
           </div>
           <div className=" d-flex">
-            <div className="totalinvocie">
-              {" "}
-              Paid Amount({brandConfig?.currencyName}):
-            </div>{" "}
+            <div className="totalinvocie"> Paid Amount(OMR):</div>{" "}
             <div className="amountpayment"> {paidAmount} </div>
           </div>
           <div className=" d-flex">
@@ -581,10 +560,7 @@ const VendorPayments = () => {
             <div className="amountpayment"> {discountAmount} </div>
           </div>
           <div className=" d-flex">
-            <div className="totalinvocie">
-              {" "}
-              Balance Amount({brandConfig?.currencyName}):
-            </div>{" "}
+            <div className="totalinvocie"> Balance Amount(OMR):</div>{" "}
             <div className="amountpayment"> {balanceAmount} </div>
           </div>
           {/*<div className=" ">

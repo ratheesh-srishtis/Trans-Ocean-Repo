@@ -7,7 +7,6 @@ import {
 } from "../../services/apiService";
 import { DataGrid } from "@mui/x-data-grid";
 import { Box, Typography } from "@mui/material";
-import brandConfig from "../../config/brandConfig"; // Importing brand configuration
 const CostCenterSummary = ({ ports, customers }) => {
   const [reportList, setReportList] = useState([]);
   const [selectedPort, setSelectedPort] = useState("");
@@ -183,17 +182,11 @@ const CostCenterSummary = ({ ports, customers }) => {
     if (!reportList || reportList.length === 0) return;
     const excelData = reportList.map((item) => ({
       "Job No": item?.jobId || "N/A",
-      Sales:
-        item?.sales?.toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2) ??
-        "N/A",
-      Purchase:
-        item?.purchase?.toFixed(brandConfig?.currencyName === "OMR" ? 3 : 2) ??
-        "N/A",
+      Sales: item?.sales?.toFixed(3) ?? "N/A",
+      Purchase: item?.purchase?.toFixed(3) ?? "N/A",
       "Profit (or Loss)":
         item?.sales && item?.purchase
-          ? (item.sales - item.purchase).toFixed(
-              brandConfig?.currencyName === "OMR" ? 3 : 2
-            )
+          ? (item.sales - item.purchase).toFixed(3)
           : "N/A",
     }));
     // Add totals row
@@ -414,19 +407,11 @@ const CostCenterSummary = ({ ports, customers }) => {
                       ? reportList?.map((item, index) => ({
                           id: index,
                           jobId: item?.jobId,
-                          sales:
-                            item?.sales.toFixed(
-                              brandConfig?.currencyName === "OMR" ? 3 : 2
-                            ) || "N/A", // Ensure employee is a string
-                          purchase:
-                            item.purchase.toFixed(
-                              brandConfig?.currencyName === "OMR" ? 3 : 2
-                            ) ?? "N/A",
+                          sales: item?.sales.toFixed(3) || "N/A", // Ensure employee is a string
+                          purchase: item.purchase.toFixed(3) ?? "N/A",
                           profitOrLoss:
                             item?.sales && item?.purchase
-                              ? (item.sales - item.purchase).toFixed(
-                                  brandConfig?.currencyName === "OMR" ? 3 : 2
-                                )
+                              ? (item.sales - item.purchase).toFixed(3)
                               : "N/A",
                         }))
                       : []

@@ -29,7 +29,6 @@ import {
   deletePdaInvoiceDocument,
 } from "../services/apiService";
 import PopUp from "./PopUp";
-import brandConfig from "../config/brandConfig"; // Import brand configuration
 const transwave = require("../assets/images/EPDA-MV-TBN-SALALAH-CARGO-(3)-1.jpg");
 const Group = require("../assets/images/TRANSocean-LOGO.png");
 
@@ -48,7 +47,7 @@ const SendInvoice = ({ open, onClose, services, selectedPdaData }) => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [invoiceFiles, setInvoiceFiles] = useState([]);
   const { logout, loginResponse } = useAuth();
-  const [hasAED, setHasAED] = useState(brandConfig?.currencyName === "AED");
+  const [hasAED, setHasAED] = useState(false);
 
   const handleAEDChange = (e) => {
     setHasAED(e.target.checked);
@@ -867,27 +866,24 @@ const SendInvoice = ({ open, onClose, services, selectedPdaData }) => {
                 </>
               )}
             </div>
-            {brandConfig?.currencyName === "OMR" && (
-              <>
-                <div className="row align-items-center mb-3 hasaedinvoice">
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      id="hasAedCheckbox"
-                      checked={hasAED}
-                      onChange={handleAEDChange}
-                    />
-                    <label
-                      className="form-check-label ms-2"
-                      htmlFor="hasAedCheckbox"
-                    >
-                      Has AED
-                    </label>
-                  </div>
-                </div>
-              </>
-            )}
+
+            <div className="row align-items-center mb-3 hasaedinvoice">
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="hasAedCheckbox"
+                  checked={hasAED}
+                  onChange={handleAEDChange}
+                />
+                <label
+                  className="form-check-label ms-2"
+                  htmlFor="hasAedCheckbox"
+                >
+                  Has AED
+                </label>
+              </div>
+            </div>
 
             <div className="firstfooter d-flex justify-content-end">
               <button

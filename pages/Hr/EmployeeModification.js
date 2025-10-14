@@ -41,7 +41,19 @@ const EmployeeModification = () => {
             <div className="employee-card" key={index}>
               <h3 className="employee-name">{emp.employeeName}</h3>
               <p className="employee-date">{formatDate(emp.createdAt)}</p>
-              <button onClick={() => handleView(emp)} className="view-btn">
+              <button
+                onClick={() => handleView(emp)}
+                className="view-btn"
+                style={{
+                  color: "#ffffff",
+                  backgroundColor: "#1ebbee",
+                  borderColor: "#1ebbee",
+                  border: "1px solid #1ebbee",
+                  padding: "8px 16px",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                }}
+              >
                 View
               </button>
             </div>

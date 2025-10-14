@@ -40,7 +40,6 @@ const CreatePDA = ({
   customers,
   loginResponse,
   vendors,
-  aedConversionRate,
 }) => {
   const createPdaImage = require("../assets/images/Group 1000002975.png");
   const updatePdaImage = require("../assets/images/updatedpda.png");
@@ -1286,10 +1285,6 @@ const CreatePDA = ({
     handleQuotationClose();
   };
 
-  useEffect(() => {
-    console.log(aedConversionRate, "aedConversionRate_createPDA");
-  }, [aedConversionRate]);
-
   return (
     <>
       <div className="pdacontent">
@@ -1767,7 +1762,7 @@ const CreatePDA = ({
                       <input
                         type="text"
                         name="berth"
-                        className="form-control vessel-voyage voyageblock timeslotnew"
+                        className="form-control vessel-voyage voyageblock timespace"
                         id="exampleFormControlInput1"
                         placeholder="00"
                         value={etaHours}
@@ -1776,7 +1771,7 @@ const CreatePDA = ({
                       <input
                         type="text"
                         name="berth"
-                        className="form-control vessel-voyage voyageblock timeslotnew"
+                        className="form-control vessel-voyage voyageblock timespace"
                         id="exampleFormControlInput1"
                         placeholder="00"
                         value={etaMinutes}
@@ -1835,7 +1830,7 @@ const CreatePDA = ({
                       <input
                         type="text"
                         name="berth"
-                        className="form-control vessel-voyage voyageblock timeslotnew"
+                        className="form-control vessel-voyage voyageblock timespace"
                         id="exampleFormControlInput1"
                         placeholder="00"
                         value={etdHours}
@@ -1844,7 +1839,7 @@ const CreatePDA = ({
                       <input
                         type="text"
                         name="berth"
-                        className="form-control vessel-voyage voyageblock timeslotnew"
+                        className="form-control vessel-voyage voyageblock timespace"
                         id="exampleFormControlInput1"
                         placeholder="00"
                         value={etdMinutes}
@@ -1917,7 +1912,7 @@ const CreatePDA = ({
                     <input
                       type="text"
                       name=""
-                      className="form-control vessel-voyage voyageblock"
+                      className="form-control vessel-voyage voyageblock "
                       id="exampleFormControlInput1"
                       placeholder=""
                       value={opsByValue}
@@ -2237,7 +2232,6 @@ const CreatePDA = ({
         fullPdaResponse={fullPdaResponse}
         vendors={vendors}
         isInitialEdit={isInitialEdit}
-        aedConversionRate={aedConversionRate}
       />
 
       <QuotationDialog
